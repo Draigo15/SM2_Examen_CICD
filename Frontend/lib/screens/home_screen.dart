@@ -1,3 +1,4 @@
+// ignore_for_file: unused_import
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -12,9 +13,7 @@ import 'settings_screen.dart';
 import 'quiz_screen.dart';
 import 'chapter_episodes_screen.dart';
 import 'chapter_results_screen.dart';
-import 'favorites_screen.dart';
 import 'vocabulary_chapters_screen.dart';
-import 'reading_screen.dart';
 import 'reading_chapters_screen.dart';
 import 'interview_screen.dart';
 
@@ -29,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int _currentIndex = 0;
   late PageController _pageController;
   late AnimationController _animationController;
-  
+
   final List<int> _navigableIndices = [0, 1, 2, 3, 4];
 
   @override
@@ -44,7 +43,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // Fetch lives status on init
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        final livesProvider = Provider.of<LivesProvider>(context, listen: false);
+        final livesProvider = Provider.of<LivesProvider>(
+          context,
+          listen: false,
+        );
         livesProvider.fetchLivesStatus();
       }
     });
@@ -83,8 +85,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         onHorizontalDragEnd: (details) {
           if (details.velocity.pixelsPerSecond.dx > 100) {
             _swipeToNext();
-          }
-          else if (details.velocity.pixelsPerSecond.dx < -100) {
+          } else if (details.velocity.pixelsPerSecond.dx < -100) {
             _swipeToPrevious();
           }
         },
@@ -114,7 +115,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   void _swipeToPrevious() {
     final currentIndexInNavigable = _navigableIndices.indexOf(_currentIndex);
-    final previousIndex = (currentIndexInNavigable - 1 + _navigableIndices.length) % _navigableIndices.length;
+    final previousIndex =
+        (currentIndexInNavigable - 1 + _navigableIndices.length) %
+        _navigableIndices.length;
     _navigateToIndex(_navigableIndices[previousIndex]);
   }
 
@@ -135,8 +138,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
-
-
   Widget _buildHomeContent() {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
@@ -146,7 +147,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Theme.of(context).colorScheme.primary,
-          statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+          statusBarIconBrightness:
+              Theme.of(context).brightness == Brightness.dark
               ? Brightness.light
               : Brightness.dark,
           statusBarBrightness: Theme.of(context).brightness,
@@ -158,12 +160,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           Consumer2<AuthProvider, LivesProvider>(
             builder: (context, authProvider, livesProvider, child) {
               return AppBanner(
-                title: '${AppLocalizations.of(context)!.hi}, ${authProvider.user?.name ?? AppLocalizations.of(context)!.user}',
+                title:
+                    '${AppLocalizations.of(context)!.hi}, ${authProvider.user?.name ?? AppLocalizations.of(context)!.user}',
                 subtitle: AppLocalizations.of(context)!.welcomeBack,
-                livesText: AppLocalizations.of(context)!.livesRemaining(livesProvider.currentLives),
+                livesText: AppLocalizations.of(
+                  context,
+                )!.livesRemaining(livesProvider.currentLives),
                 onSettingsTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsScreen(),
+                    ),
                   );
                 },
               );
@@ -184,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Cards
                   Expanded(
                     child: SingleChildScrollView(
@@ -192,41 +199,55 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         children: [
                           // Vocabulary Card
                           CustomCard(
-                            title: AppLocalizations.of(context)!.chapterProgress,
-                            subtitle: AppLocalizations.of(context)!.continueText,
-                            description: AppLocalizations.of(context)!.vocabulary,
+                            title: AppLocalizations.of(
+                              context,
+                            )!.chapterProgress,
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.continueText,
+                            description: AppLocalizations.of(
+                              context,
+                            )!.vocabulary,
                             icon: CustomIcons.vocabularyIcon(),
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const ChapterEpisodesScreen(
-                                  chapterTitle: "English Basics",
-                                ),
+                                builder: (context) =>
+                                    const ChapterEpisodesScreen(
+                                      chapterTitle: "English Basics",
+                                    ),
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // Reading Card
                           CustomCard(
                             title: AppLocalizations.of(context)!.software,
-                            subtitle: AppLocalizations.of(context)!.continueText,
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.continueText,
                             description: AppLocalizations.of(context)!.reading,
                             icon: CustomIcons.readingIcon(),
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const ReadingChaptersScreen(),
+                                builder: (context) =>
+                                    const ReadingChaptersScreen(),
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // Interview Card
                           CustomCard(
                             title: AppLocalizations.of(context)!.databases,
-                            subtitle: AppLocalizations.of(context)!.continueText,
-                            description: AppLocalizations.of(context)!.interview,
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.continueText,
+                            description: AppLocalizations.of(
+                              context,
+                            )!.interview,
                             icon: CustomIcons.interviewIcon(),
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(
@@ -234,14 +255,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // Chapter Results Card
                           CustomCard(
                             title: AppLocalizations.of(context)!.chapterResults,
                             subtitle: AppLocalizations.of(context)!.progress,
-                            description: AppLocalizations.of(context)!.evaluationDetails,
+                            description: AppLocalizations.of(
+                              context,
+                            )!.evaluationDetails,
                             icon: Icon(
                               Icons.analytics,
                               size: 32,
@@ -249,7 +272,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             ),
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const ChapterResultsScreen(),
+                                builder: (context) =>
+                                    const ChapterResultsScreen(),
                               ),
                             ),
                           ),
@@ -265,6 +289,4 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
-
-
 }

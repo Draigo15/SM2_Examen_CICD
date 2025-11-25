@@ -20,7 +20,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   String _searchQuery = '';
   String _selectedCategory = 'all';
   String _selectedLanguage = 'all';
-  
+
   @override
   void initState() {
     super.initState();
@@ -30,7 +30,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   Future<void> _loadFavorites() async {
-    final favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
+    final favoritesProvider = Provider.of<FavoritesProvider>(
+      context,
+      listen: false,
+    );
     await favoritesProvider.loadFavorites();
   }
 
@@ -38,7 +41,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
@@ -60,9 +63,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       body: Consumer<FavoritesProvider>(
         builder: (context, favoritesProvider, child) {
           if (favoritesProvider.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (favoritesProvider.hasError) {
@@ -93,7 +94,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             );
           }
 
-          final filteredFavorites = _getFilteredFavorites(favoritesProvider.favorites);
+          final filteredFavorites = _getFilteredFavorites(
+            favoritesProvider.favorites,
+          );
 
           if (filteredFavorites.isEmpty) {
             return Center(
@@ -107,7 +110,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    _searchQuery.isNotEmpty || _selectedCategory != 'all' || _selectedLanguage != 'all'
+                    _searchQuery.isNotEmpty ||
+                            _selectedCategory != 'all' ||
+                            _selectedLanguage != 'all'
                         ? 'No favorites found matching your filters'
                         : 'No favorite words yet',
                     style: theme.textTheme.bodyLarge?.copyWith(
@@ -115,7 +120,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  if (_searchQuery.isNotEmpty || _selectedCategory != 'all' || _selectedLanguage != 'all') ...[
+                  if (_searchQuery.isNotEmpty ||
+                      _selectedCategory != 'all' ||
+                      _selectedLanguage != 'all') ...[
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _clearFilters,
@@ -129,8 +136,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
           return RefreshIndicator(
             onRefresh: () async {
+              final token = Provider.of<AuthProvider>(
+                context,
+                listen: false,
+              ).token;
               await _loadFavorites();
-              // TODO: Sync with server
+              await favoritesProvider.syncWithServer(token: token);
             },
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
@@ -146,15 +157,16 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     );
   }
 
-  Widget _buildFavoriteCard(FavoriteWord favorite, FavoritesProvider favoritesProvider) {
+  Widget _buildFavoriteCard(
+    FavoriteWord favorite,
+    FavoritesProvider favoritesProvider,
+  ) {
     final theme = Theme.of(context);
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () => _showTranslationPanel(favorite),
@@ -180,7 +192,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         Text(
                           favorite.translation,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.8,
+                            ),
                           ),
                         ),
                       ],
@@ -189,7 +203,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (favorite.pronunciation != null || favorite.audioUrl != null)
+                      if (favorite.pronunciation != null ||
+                          favorite.audioUrl != null)
                         IconButton(
                           icon: const Icon(Icons.volume_up, size: 20),
                           onPressed: () => _playAudio(favorite),
@@ -201,7 +216,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         ),
                       IconButton(
                         icon: const Icon(Icons.delete_outline, size: 20),
-                        onPressed: () => _confirmDelete(favorite, favoritesProvider),
+                        onPressed: () =>
+                            _confirmDelete(favorite, favoritesProvider),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(
                           minWidth: 32,
@@ -225,7 +241,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               if (favorite.category != null) ...[
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(12),
@@ -253,7 +272,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         final query = _searchQuery.toLowerCase();
         if (!(favorite.word?.toLowerCase().contains(query) ?? false) &&
             !favorite.translation.toLowerCase().contains(query)) {
-          if (favorite.category != null && favorite.category!.toLowerCase().contains(query)) return true;
+          if (favorite.category != null &&
+              favorite.category!.toLowerCase().contains(query)) {
+            return true;
+          }
           return false;
         }
       }
@@ -313,7 +335,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   void _showFilterDialog() {
-    final favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
+    final favoritesProvider = Provider.of<FavoritesProvider>(
+      context,
+      listen: false,
+    );
     final categories = favoritesProvider.favorites
         .map((f) => f.category)
         .where((c) => c != null)
@@ -338,11 +363,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               value: _selectedCategory,
               isExpanded: true,
               items: [
-                const DropdownMenuItem(value: 'all', child: Text('All Categories')),
-                ...categories.map((category) => DropdownMenuItem(
-                  value: category,
-                  child: Text(category),
-                )),
+                const DropdownMenuItem(
+                  value: 'all',
+                  child: Text('All Categories'),
+                ),
+                ...categories.map(
+                  (category) =>
+                      DropdownMenuItem(value: category, child: Text(category)),
+                ),
               ],
               onChanged: (value) {
                 setState(() {
@@ -356,11 +384,16 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               value: _selectedLanguage,
               isExpanded: true,
               items: [
-                const DropdownMenuItem(value: 'all', child: Text('All Languages')),
-                ...languages.map((language) => DropdownMenuItem(
-                  value: language,
-                  child: Text(language?.toUpperCase() ?? ''),
-                )),
+                const DropdownMenuItem(
+                  value: 'all',
+                  child: Text('All Languages'),
+                ),
+                ...languages.map(
+                  (language) => DropdownMenuItem(
+                    value: language,
+                    child: Text(language?.toUpperCase() ?? ''),
+                  ),
+                ),
               ],
               onChanged: (value) {
                 setState(() {
@@ -371,10 +404,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: _clearFilters,
-            child: const Text('Clear All'),
-          ),
+          TextButton(onPressed: _clearFilters, child: const Text('Clear All')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Done'),
@@ -400,9 +430,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       } else {
         final success = await _audioService.speakText(
           favorite.word ?? '',
-          language: _audioService.getSupportedLanguage(favorite.language ?? 'en'),
+          language: _audioService.getSupportedLanguage(
+            favorite.language ?? 'en',
+          ),
         );
-        
+
         if (!success && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -424,7 +456,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     }
   }
 
-  void _confirmDelete(FavoriteWord favorite, FavoritesProvider favoritesProvider) {
+  void _confirmDelete(
+    FavoriteWord favorite,
+    FavoritesProvider favoritesProvider,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -438,14 +473,17 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
-              
+
               final scaffoldMessenger = ScaffoldMessenger.of(context);
-              final authProvider = Provider.of<AuthProvider>(context, listen: false);
+              final authProvider = Provider.of<AuthProvider>(
+                context,
+                listen: false,
+              );
               final success = await favoritesProvider.removeFromFavorites(
                 favorite.id,
                 token: authProvider.token,
               );
-              
+
               if (!success && mounted) {
                 scaffoldMessenger.showSnackBar(
                   const SnackBar(

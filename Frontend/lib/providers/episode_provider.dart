@@ -35,7 +35,33 @@ class EpisodeProvider with ChangeNotifier {
 
   void playEpisode(int episodeId) {
     if (canPlayEpisode(episodeId)) {
-      // TODO: Implement Play Episode Logic
+      _selectedEpisodeId = episodeId;
+
+      for (int i = 0; i < _currentChapter.episodes.length; i++) {
+        final ep = _currentChapter.episodes[i];
+        if (ep.id == episodeId) {
+          _currentChapter.episodes[i] = Episode(
+            id: ep.id,
+            title: ep.title,
+            difficulty: ep.difficulty,
+            status: EpisodeStatus.current,
+            description: ep.description,
+            progress: ep.progress,
+          );
+        } else if (ep.status == EpisodeStatus.current && ep.id != episodeId) {
+          // Mantener otros episodios actuales como completados si ya estaban al 100%
+          _currentChapter.episodes[i] = Episode(
+            id: ep.id,
+            title: ep.title,
+            difficulty: ep.difficulty,
+            status: ep.progress >= 1.0 ? EpisodeStatus.completed : ep.status,
+            description: ep.description,
+            progress: ep.progress,
+          );
+        }
+      }
+
+      notifyListeners();
       debugPrint('Playing episode $episodeId');
     }
   }
@@ -52,12 +78,70 @@ class EpisodeProvider with ChangeNotifier {
   }
 
   void completeEpisode(int episodeId) {
-    // TODO: Implement Complete Episode Logic
+    for (int i = 0; i < _currentChapter.episodes.length; i++) {
+      final ep = _currentChapter.episodes[i];
+      if (ep.id == episodeId) {
+        // Marcar como completado
+        _currentChapter.episodes[i] = Episode(
+          id: ep.id,
+          title: ep.title,
+          difficulty: ep.difficulty,
+          status: EpisodeStatus.completed,
+          description: ep.description,
+          progress: 1.0,
+        );
+
+        // Desbloquear el siguiente episodio
+        if (i + 1 < _currentChapter.episodes.length) {
+          final next = _currentChapter.episodes[i + 1];
+          _currentChapter.episodes[i + 1] = Episode(
+            id: next.id,
+            title: next.title,
+            difficulty: next.difficulty,
+            status: EpisodeStatus.current,
+            description: next.description,
+            progress: next.progress,
+          );
+          _selectedEpisodeId = next.id;
+        }
+        break;
+      }
+    }
+
     notifyListeners();
   }
 
   void updateProgress(int episodeId, double newProgress) {
-    // TODO: Implement Update Episode Progress Logic
+    for (int i = 0; i < _currentChapter.episodes.length; i++) {
+      final ep = _currentChapter.episodes[i];
+      if (ep.id == episodeId && ep.status != EpisodeStatus.locked) {
+        final clamped = newProgress.clamp(0.0, 1.0);
+        _currentChapter.episodes[i] = Episode(
+          id: ep.id,
+          title: ep.title,
+          difficulty: ep.difficulty,
+          status: clamped >= 1.0 ? EpisodeStatus.completed : ep.status,
+          description: ep.description,
+          progress: clamped,
+        );
+
+        // Si se completó al actualizar progreso, desbloquear el siguiente
+        if (clamped >= 1.0 && i + 1 < _currentChapter.episodes.length) {
+          final next = _currentChapter.episodes[i + 1];
+          _currentChapter.episodes[i + 1] = Episode(
+            id: next.id,
+            title: next.title,
+            difficulty: next.difficulty,
+            status: EpisodeStatus.current,
+            description: next.description,
+            progress: next.progress,
+          );
+          _selectedEpisodeId = next.id;
+        }
+        break;
+      }
+    }
+
     notifyListeners();
   }
 

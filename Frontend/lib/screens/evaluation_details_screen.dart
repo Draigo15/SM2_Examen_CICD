@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 
 import '../models/chapter_evaluation.dart';
 import '../l10n/app_localizations.dart';
+import 'chapter_episodes_screen.dart';
+import 'package:provider/provider.dart';
+import '../providers/episode_provider.dart';
 
 class EvaluationDetailsScreen extends StatelessWidget {
   final ChapterEvaluation evaluation;
@@ -256,12 +259,19 @@ class EvaluationDetailsScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: () {
-                  // TODO: Implementar navegación a repetir capítulo
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        l10n?.featureComingSoon ?? "Feature coming soon",
+                onPressed: () async {
+                  final episodeProvider = Provider.of<EpisodeProvider>(
+                    context,
+                    listen: false,
+                  );
+                  episodeProvider.resetChapterForRepetition(
+                    evaluation.chapterNumber,
+                  );
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChapterEpisodesScreen(
+                        chapterTitle: evaluation.chapterTitle,
                       ),
                     ),
                   );

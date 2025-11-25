@@ -581,10 +581,14 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
   }
 
   void _shareTranslation() {
-    // TODO: Implement sharing functionality
+    final text =
+        'Original: ${widget.originalText}\n'
+        'Translation: ${widget.translation.translatedText}'
+        '${widget.translation.pronunciation != null ? '\nPronunciation: /${widget.translation.pronunciation!}/' : ''}';
+    Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Share functionality will be implemented soon'),
+        content: Text('Copied details to clipboard'),
         duration: Duration(seconds: 2),
       ),
     );

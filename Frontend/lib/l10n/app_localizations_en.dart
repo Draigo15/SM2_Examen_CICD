@@ -405,7 +405,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String currentScore(int score) {
-    return 'Current score: $score points';
+    return 'Current Score: $score points';
   }
 
   @override

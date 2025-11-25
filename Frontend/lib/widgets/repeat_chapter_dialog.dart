@@ -124,7 +124,7 @@ class RepeatChapterDialog extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  localizations.currentScore as String,
+                  localizations.currentScore(currentScore),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.bold,

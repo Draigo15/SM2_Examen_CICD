@@ -1,22 +1,26 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 import 'environment_config.dart';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
-  
+
   factory ApiService() => _instance;
-  
+
   ApiService._internal();
-  
+
   // Default headers for all requests
   Map<String, String> get _defaultHeaders => {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   };
-  
+
   // Helper method to add authorization header
-  Map<String, String> _getHeaders({String? token, bool withCredentials = false}) {
+  Map<String, String> _getHeaders({
+    String? token,
+    bool withCredentials = false,
+  }) {
     final headers = Map<String, String>.from(_defaultHeaders);
     if (token != null) {
       headers['Authorization'] = 'Bearer $token';
@@ -25,11 +29,12 @@ class ApiService {
     if (withCredentials) {
       headers['X-Requested-With'] = 'XMLHttpRequest';
       // Backend requires Origin header - use mobile app compatible origin
-      headers['Origin'] = 'http://10.0.2.2:3000'; // Dirección especial para emulador Android
+      headers['Origin'] =
+          'http://10.0.2.2:3000'; // Dirección especial para emulador Android
     }
     return headers;
   }
-  
+
   // Helper method to log requests (only in development)
   void _logRequest(String method, String url, Map<String, dynamic>? body) {
     if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
@@ -41,7 +46,7 @@ class ApiService {
       }
     }
   }
-  
+
   // Helper method to log responses (only in development)
   void _logResponse(http.Response response) {
     if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
@@ -49,7 +54,7 @@ class ApiService {
       debugPrint('📥 Response ${response.statusCode}: ${response.body}');
     }
   }
-  
+
   // POST request method
   Future<ApiResponse> post(
     String endpoint, {
@@ -60,15 +65,20 @@ class ApiService {
     try {
       final url = Uri.parse(endpoint);
       _logRequest('POST', endpoint, body);
-      
-      final response = await http.post(
-        url,
-        headers: _getHeaders(token: token, withCredentials: withCredentials),
-        body: body != null ? jsonEncode(body) : null,
-      ).timeout(EnvironmentConfig.apiTimeout);
-      
+
+      final response = await http
+          .post(
+            url,
+            headers: _getHeaders(
+              token: token,
+              withCredentials: withCredentials,
+            ),
+            body: body != null ? jsonEncode(body) : null,
+          )
+          .timeout(EnvironmentConfig.apiTimeout);
+
       _logResponse(response);
-      
+
       return ApiResponse(
         statusCode: response.statusCode,
         data: _parseResponse(response.body),
@@ -88,7 +98,7 @@ class ApiService {
       );
     }
   }
-  
+
   // GET request method
   Future<ApiResponse> get(
     String endpoint, {
@@ -99,13 +109,18 @@ class ApiService {
       final url = Uri.parse(endpoint);
       _logRequest('GET', endpoint, null);
 
-      final response = await http.get(
-        url,
-        headers: _getHeaders(token: token, withCredentials: withCredentials),
-      ).timeout(EnvironmentConfig.apiTimeout);
-      
+      final response = await http
+          .get(
+            url,
+            headers: _getHeaders(
+              token: token,
+              withCredentials: withCredentials,
+            ),
+          )
+          .timeout(EnvironmentConfig.apiTimeout);
+
       _logResponse(response);
-      
+
       return ApiResponse(
         statusCode: response.statusCode,
         data: _parseResponse(response.body),
@@ -125,7 +140,7 @@ class ApiService {
       );
     }
   }
-  
+
   // PUT request method
   Future<ApiResponse> put(
     String endpoint, {
@@ -137,14 +152,19 @@ class ApiService {
       final url = Uri.parse(endpoint);
       _logRequest('PUT', endpoint, body);
 
-      final response = await http.put(
-        url,
-        headers: _getHeaders(token: token, withCredentials: withCredentials),
-        body: body != null ? jsonEncode(body) : null,
-      ).timeout(EnvironmentConfig.apiTimeout);
-      
+      final response = await http
+          .put(
+            url,
+            headers: _getHeaders(
+              token: token,
+              withCredentials: withCredentials,
+            ),
+            body: body != null ? jsonEncode(body) : null,
+          )
+          .timeout(EnvironmentConfig.apiTimeout);
+
       _logResponse(response);
-      
+
       return ApiResponse(
         statusCode: response.statusCode,
         data: _parseResponse(response.body),
@@ -164,7 +184,7 @@ class ApiService {
       );
     }
   }
-  
+
   // DELETE request method
   Future<ApiResponse> delete(
     String endpoint, {
@@ -175,13 +195,18 @@ class ApiService {
       final url = Uri.parse(endpoint);
       _logRequest('DELETE', endpoint, null);
 
-      final response = await http.delete(
-        url,
-        headers: _getHeaders(token: token, withCredentials: withCredentials),
-      ).timeout(EnvironmentConfig.apiTimeout);
-      
+      final response = await http
+          .delete(
+            url,
+            headers: _getHeaders(
+              token: token,
+              withCredentials: withCredentials,
+            ),
+          )
+          .timeout(EnvironmentConfig.apiTimeout);
+
       _logResponse(response);
-      
+
       return ApiResponse(
         statusCode: response.statusCode,
         data: _parseResponse(response.body),
@@ -201,7 +226,7 @@ class ApiService {
       );
     }
   }
-  
+
   // Helper method to parse JSON response
   dynamic _parseResponse(String responseBody) {
     try {
@@ -210,7 +235,7 @@ class ApiService {
       return responseBody;
     }
   }
-  
+
   // Helper method to extract message from response
   String _extractMessage(String responseBody, int statusCode) {
     try {
@@ -223,7 +248,7 @@ class ApiService {
     }
     return _getDefaultMessage(statusCode);
   }
-  
+
   // Get default message based on status code
   String _getDefaultMessage(int statusCode) {
     switch (statusCode) {
@@ -246,7 +271,7 @@ class ApiService {
         return 'Unknown error';
     }
   }
-  
+
   // Handle different types of errors
   String _handleError(dynamic error) {
     if (error.toString().contains('TimeoutException')) {
@@ -274,8 +299,9 @@ class ApiService {
     String? completionNotes,
     Map<String, dynamic>? extraData,
   }) async {
-    final endpoint = '${EnvironmentConfig.fullApiUrl}/vocab/chapters/$chapterId/complete';
-    
+    final endpoint =
+        '${EnvironmentConfig.fullApiUrl}/vocab/chapters/$chapterId/complete';
+
     final body = <String, dynamic>{};
     if (finalScore != null) body['finalScore'] = finalScore;
     if (completionNotes != null) body['completionNotes'] = completionNotes;
@@ -298,27 +324,29 @@ class ApiService {
     Map<String, dynamic> evaluationData, {
     String? token,
   }) async {
-    final endpoint = '${EnvironmentConfig.fullApiUrl}/approval/evaluate/$chapterId';
-    
-    final body = {
-      'chapterId': chapterId,
-      ...evaluationData,
-    };
+    final endpoint =
+        '${EnvironmentConfig.fullApiUrl}/approval/evaluate/$chapterId';
+
+    final body = {'chapterId': chapterId, ...evaluationData};
 
     return await post(endpoint, body: body, token: token);
   }
 
   /// Get evaluation history for a specific user
   Future<ApiResponse> getEvaluationHistory(int? userId, {String? token}) async {
-    final endpoint = userId != null 
+    final endpoint = userId != null
         ? '${EnvironmentConfig.fullApiUrl}/approval/history/$userId'
         : '${EnvironmentConfig.fullApiUrl}/approval/history';
     return await get(endpoint, token: token);
   }
 
   /// Get evaluation details by evaluation ID
-  Future<ApiResponse> getEvaluationDetails(String evaluationId, {String? token}) async {
-    final endpoint = '${EnvironmentConfig.fullApiUrl}/approval/evaluations/$evaluationId';
+  Future<ApiResponse> getEvaluationDetails(
+    String evaluationId, {
+    String? token,
+  }) async {
+    final endpoint =
+        '${EnvironmentConfig.fullApiUrl}/approval/evaluations/$evaluationId';
     return await get(endpoint, token: token);
   }
 
@@ -344,14 +372,14 @@ class ApiResponse {
   final dynamic data;
   final bool success;
   final String message;
-  
+
   ApiResponse({
     required this.statusCode,
     required this.data,
     required this.success,
     required this.message,
   });
-  
+
   @override
   String toString() {
     return 'ApiResponse{statusCode: $statusCode, success: $success, message: $message}';

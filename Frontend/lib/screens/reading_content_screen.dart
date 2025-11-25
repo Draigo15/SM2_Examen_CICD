@@ -63,12 +63,16 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
     final l10n = AppLocalizations.of(context)!;
     final contentProvider = Provider.of<ReadingContentProvider>(context);
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (contentProvider.isQuizMode) {
-          return await _showExitQuizDialog(context);
+    return PopScope(
+      canPop: !contentProvider.isQuizMode,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop && contentProvider.isQuizMode) {
+          final navigator = Navigator.of(context);
+          final shouldExit = await _showExitQuizDialog(context);
+          if (shouldExit) {
+            navigator.pop();
+          }
         }
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(title: Text(widget.chapter.title), elevation: 0),
@@ -896,6 +900,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
   Future<void> _onNextOrStartQuiz(ReadingContentProvider provider) async {
     if (provider.isLastPage) {
       final l10n = AppLocalizations.of(context)!;
+      final messenger = ScaffoldMessenger.of(context);
       await provider.startQuiz();
 
       // Check if there was an error loading quiz
@@ -911,7 +916,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
               onPressed: () => _onNextOrStartQuiz(provider),
             ),
           );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          messenger.showSnackBar(snackBar);
           SemanticsService.announce(provider.errorMessage!, TextDirection.ltr);
         }
       }
@@ -1016,6 +1021,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
 
   /// Show life lost animation
   Future<void> _showLifeLostAnimation() async {
+    final navigator = Navigator.of(context);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -1024,7 +1030,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
     );
 
     await Future.delayed(const Duration(milliseconds: 1500));
-    if (mounted) Navigator.of(context).pop();
+    navigator.pop();
   }
 
   /// Shows a feedback animation for correct or incorrect answers
@@ -1244,6 +1250,8 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       listen: false,
     );
     final livesProvider = Provider.of<LivesProvider>(context, listen: false);
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
     final result = await provider.submitQuiz();
 
     // Log integration test result
@@ -1255,7 +1263,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
     }
 
     // Close loading dialog
-    if (mounted) Navigator.pop(context);
+    navigator.pop();
 
     if (!result['success']) {
       if (mounted) {
@@ -1264,7 +1272,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
           content: Text(errorMessage),
           backgroundColor: Colors.red,
         );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        messenger.showSnackBar(snackBar);
         SemanticsService.announce(errorMessage, TextDirection.ltr);
       }
       return;
