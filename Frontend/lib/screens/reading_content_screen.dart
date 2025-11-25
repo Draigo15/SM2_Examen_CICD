@@ -826,6 +826,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                             onPressed: () {
                               provider.previousQuestion();
                               HapticFeedback.lightImpact();
+                              // ignore: deprecated_member_use
                               SemanticsService.announce(
                                 'Pregunta anterior',
                                 TextDirection.ltr,
@@ -856,6 +857,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                             onPressed: () {
                               provider.nextQuestion();
                               HapticFeedback.lightImpact();
+                              // ignore: deprecated_member_use
                               SemanticsService.announce(
                                 'Siguiente pregunta',
                                 TextDirection.ltr,
@@ -917,6 +919,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
             ),
           );
           messenger.showSnackBar(snackBar);
+          // ignore: deprecated_member_use
           SemanticsService.announce(provider.errorMessage!, TextDirection.ltr);
         }
       }
@@ -947,6 +950,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       // Play success sound
       await AudioPlayer().play(AssetSource('sounds/correct_answer.mp3'));
 
+      // ignore: deprecated_member_use
       SemanticsService.announce('¡Respuesta correcta!', TextDirection.ltr);
 
       await Future.delayed(const Duration(milliseconds: 1000));
@@ -969,6 +973,8 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       // Play error sound
       await AudioPlayer().play(AssetSource('sounds/wrong_answer.mp3'));
 
+      if (!mounted) return;
+      // ignore: deprecated_member_use
       SemanticsService.announce(
         'Respuesta incorrecta. Intenta de nuevo.',
         TextDirection.ltr,
@@ -986,6 +992,8 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       // Play error sound
       await AudioPlayer().play(AssetSource('sounds/wrong_answer.mp3'));
 
+      if (!mounted) return;
+      // ignore: deprecated_member_use
       SemanticsService.announce(
         'Respuesta incorrecta. Se mostrará la respuesta correcta.',
         TextDirection.ltr,
@@ -1273,6 +1281,8 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
           backgroundColor: Colors.red,
         );
         messenger.showSnackBar(snackBar);
+        if (!mounted) return;
+        // ignore: deprecated_member_use
         SemanticsService.announce(errorMessage, TextDirection.ltr);
       }
       return;
