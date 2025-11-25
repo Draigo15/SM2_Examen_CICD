@@ -49,11 +49,14 @@ void main() {
       await tester.tap(find.text('Show Dialog'));
       await tester.pumpAndSettle();
 
-      // Verify dialog elements are present
-      expect(find.text('Repeat Chapter'), findsWidgets);
+      // Verify dialog elements using localizations to avoid locale mismatch in CI
+      final scaffoldContext = tester.element(find.byType(Scaffold));
+      final l10n = AppLocalizations.of(scaffoldContext)!;
+
+      expect(find.text(l10n.repeatChapterTitle), findsWidgets);
       expect(find.text('Test Chapter'), findsOneWidget);
-      expect(find.text('Current Score: 85 points'), findsOneWidget);
-      expect(find.text('Cancel'), findsOneWidget);
+      expect(find.text(l10n.currentScore(85)), findsOneWidget);
+      expect(find.text(l10n.cancel), findsOneWidget);
     });
 
     testWidgets('RepeatChapterDialog cancel button works', (
