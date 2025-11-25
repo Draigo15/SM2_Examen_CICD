@@ -942,7 +942,6 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       // Play success sound
       await AudioPlayer().play(AssetSource('sounds/correct_answer.mp3'));
 
-      // Announce for screen readers
       SemanticsService.announce('¡Respuesta correcta!', TextDirection.ltr);
 
       await Future.delayed(const Duration(milliseconds: 1000));
@@ -965,7 +964,6 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       // Play error sound
       await AudioPlayer().play(AssetSource('sounds/wrong_answer.mp3'));
 
-      // Announce for screen readers
       SemanticsService.announce(
         'Respuesta incorrecta. Intenta de nuevo.',
         TextDirection.ltr,
@@ -983,7 +981,6 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       // Play error sound
       await AudioPlayer().play(AssetSource('sounds/wrong_answer.mp3'));
 
-      // Announce for screen readers
       SemanticsService.announce(
         'Respuesta incorrecta. Se mostrará la respuesta correcta.',
         TextDirection.ltr,

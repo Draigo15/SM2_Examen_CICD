@@ -39,14 +39,12 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
 
   List<Translation> _relatedTranslations = [];
   bool _isLoadingRelated = false;
-  bool _isFavorite = false;
   String? _error;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _checkFavoriteStatus();
     if (widget.showRelatedTranslations) {
       _loadRelatedTranslations();
     }
@@ -56,14 +54,6 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
   void dispose() {
     _tabController.dispose();
     super.dispose();
-  }
-
-  void _checkFavoriteStatus() {
-    final favoritesProvider =
-        Provider.of<FavoritesProvider>(context, listen: false);
-    setState(() {
-      _isFavorite = favoritesProvider.isFavorite(widget.originalText);
-    });
   }
 
   Future<void> _loadRelatedTranslations() async {
@@ -101,9 +91,7 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
         height: MediaQuery.of(context).size.height * 0.8,
@@ -142,26 +130,26 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
               Text(
                 'Translation Details',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 '${widget.sourceLanguage.toUpperCase()} → ${widget.targetLanguage.toUpperCase()}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
-                    ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
               ),
             ],
           ),
         ),
         Consumer<FavoritesProvider>(
           builder: (context, favoritesProvider, child) {
-            final isFavorite =
-                favoritesProvider.isFavorite(widget.originalText);
+            final isFavorite = favoritesProvider.isFavorite(
+              widget.originalText,
+            );
             return IconButton(
               icon: Icon(
                 isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -182,10 +170,9 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
   Widget _buildTabBar() {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context)
-            .colorScheme
-            .surfaceContainerHighest
-            .withValues(alpha: 0.3),
+        color: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: TabBar(
@@ -198,18 +185,9 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
         labelColor: Theme.of(context).colorScheme.onPrimary,
         unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
         tabs: const [
-          Tab(
-            icon: Icon(Icons.translate, size: 20),
-            text: 'Translation',
-          ),
-          Tab(
-            icon: Icon(Icons.info_outline, size: 20),
-            text: 'Details',
-          ),
-          Tab(
-            icon: Icon(Icons.history, size: 20),
-            text: 'History',
-          ),
+          Tab(icon: Icon(Icons.translate, size: 20), text: 'Translation'),
+          Tab(icon: Icon(Icons.info_outline, size: 20), text: 'Details'),
+          Tab(icon: Icon(Icons.history, size: 20), text: 'History'),
         ],
       ),
     );
@@ -261,8 +239,8 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const Spacer(),
                 Chip(
@@ -286,22 +264,19 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
                   Icon(
                     Icons.record_voice_over,
                     size: 16,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     '/$pronunciation/',
-                    style:
-                        Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontStyle: FontStyle.italic,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withValues(alpha: 0.7),
-                            ),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontStyle: FontStyle.italic,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
                   ),
                   const Spacer(),
                   IconButton(
@@ -339,9 +314,9 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
           children: [
             Text(
               'Examples',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             ...widget.translation.examples.map(
@@ -353,8 +328,7 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
                     Container(
                       width: 4,
                       height: 4,
-                      margin:
-                          const EdgeInsets.only(top: 8, right: 8),
+                      margin: const EdgeInsets.only(top: 8, right: 8),
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.primary,
                         shape: BoxShape.circle,
@@ -363,8 +337,7 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
                     Expanded(
                       child: SelectableText(
                         example,
-                        style:
-                            Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),
                   ],
@@ -381,42 +354,38 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildDetailCard(
-            'Translation Information',
-            [
-              _buildDetailRow('Source Language',
-                  widget.sourceLanguage.toUpperCase()),
-              _buildDetailRow('Target Language',
-                  widget.targetLanguage.toUpperCase()),
-              if (widget.context != null)
-                _buildDetailRow('Context', widget.context!),
+          _buildDetailCard('Translation Information', [
+            _buildDetailRow(
+              'Source Language',
+              widget.sourceLanguage.toUpperCase(),
+            ),
+            _buildDetailRow(
+              'Target Language',
+              widget.targetLanguage.toUpperCase(),
+            ),
+            if (widget.context != null)
+              _buildDetailRow('Context', widget.context!),
+            _buildDetailRow(
+              'Created',
+              _formatDateTime(widget.translation.createdAt),
+            ),
+            if (widget.translation.expiresAt != null)
               _buildDetailRow(
-                  'Created',
-                  _formatDateTime(
-                      widget.translation.createdAt)),
-              if (widget.translation.expiresAt != null)
-                _buildDetailRow(
-                    'Expires',
-                    _formatDateTime(
-                        widget.translation.expiresAt!)),
-            ],
-          ),
+                'Expires',
+                _formatDateTime(widget.translation.expiresAt!),
+              ),
+          ]),
           const SizedBox(height: 16),
           if (widget.translation.audioUrl != null)
-            _buildDetailCard(
-              'Audio',
-              [
-                _buildDetailRow(
-                    'Audio URL', widget.translation.audioUrl!),
-                const SizedBox(height: 8),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.play_arrow),
-                  label: const Text('Play Audio'),
-                  onPressed: () =>
-                      _playAudio(widget.translation.audioUrl),
-                ),
-              ],
-            ),
+            _buildDetailCard('Audio', [
+              _buildDetailRow('Audio URL', widget.translation.audioUrl!),
+              const SizedBox(height: 8),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.play_arrow),
+                label: const Text('Play Audio'),
+                onPressed: () => _playAudio(widget.translation.audioUrl),
+              ),
+            ]),
         ],
       ),
     );
@@ -428,9 +397,9 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
       children: [
         Text(
           'Recent Translations',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 16),
         if (_isLoadingRelated)
@@ -447,9 +416,7 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
                 const SizedBox(height: 8),
                 Text(
                   _error!,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -489,15 +456,13 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
                     ),
                     trailing: Text(
                       _formatDateTime(translation.createdAt),
-                      style:
-                          Theme.of(context).textTheme.bodySmall,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     onTap: () {
                       Navigator.of(context).pop();
                       showDialog(
                         context: context,
-                        builder: (context) =>
-                            TranslationPanelWidget(
+                        builder: (context) => TranslationPanelWidget(
                           translation: translation,
                           originalText: translation.originalText,
                           sourceLanguage: widget.sourceLanguage,
@@ -524,9 +489,9 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             ...children,
@@ -546,9 +511,9 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
             width: 120,
             child: Text(
               label,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
@@ -611,8 +576,7 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
   }
 
   void _copyAllToClipboard() {
-    final text =
-        '${widget.originalText}\n${widget.translation.translatedText}';
+    final text = '${widget.originalText}\n${widget.translation.translatedText}';
     _copyToClipboard(text);
   }
 
@@ -683,18 +647,16 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
     }
   }
 
-  Future<void> _toggleFavorite(
-      FavoritesProvider favoritesProvider) async {
-    final authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+  Future<void> _toggleFavorite(FavoritesProvider favoritesProvider) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final token = authProvider.token;
 
-    final isFavorite =
-        favoritesProvider.isFavorite(widget.originalText);
+    final isFavorite = favoritesProvider.isFavorite(widget.originalText);
 
     if (isFavorite) {
-      final favoriteWord =
-          favoritesProvider.getFavoriteByWord(widget.originalText);
+      final favoriteWord = favoritesProvider.getFavoriteByWord(
+        widget.originalText,
+      );
       if (favoriteWord != null) {
         await favoritesProvider.removeFromFavorites(
           favoriteWord.id,
@@ -719,10 +681,7 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
         serverId: null,
       );
 
-      await favoritesProvider.addToFavorites(
-        favoriteWord,
-        token: token,
-      );
+      await favoritesProvider.addToFavorites(favoriteWord, token: token);
     }
   }
 }

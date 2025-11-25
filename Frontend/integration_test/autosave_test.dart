@@ -29,8 +29,7 @@ void main() {
       // Enable test mode for the provider
       progressProvider.enableTestMode();
       
-      // Monitor initial state
-      final initialSaveState = progressProvider.progressState;
+      
 
       // Simulate word learning with intervals
       for (int i = 0; i < 5; i++) {
@@ -364,12 +363,4 @@ Future<void> _answerInterviewQuestion(WidgetTester tester, int questionIndex) as
   }
 }
 
-Future<void> _simulateNetworkError(WidgetTester tester) async {
-  final progressProvider = Provider.of<ProgressProvider>(tester.element(find.byType(MaterialApp)), listen: false);
-  progressProvider.simulateNetworkError(true);
-}
-
-Future<void> _simulateNetworkRecovery(WidgetTester tester) async {
-  final progressProvider = Provider.of<ProgressProvider>(tester.element(find.byType(MaterialApp)), listen: false);
-  progressProvider.simulateNetworkError(false);
-}
+ 

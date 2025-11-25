@@ -428,10 +428,18 @@ class InterviewPracticeService extends BasePracticeService {
     int? offset,
   }) async {
     final filters = <String, dynamic>{};
-    if (interviewType != null) filters['interviewType'] = interviewType;
-    if (difficultyLevel != null) filters['difficultyLevel'] = difficultyLevel;
-    if (completed != null) filters['completed'] = completed;
-    if (minScore != null) filters['minScore'] = minScore;
+    if (interviewType != null) {
+      filters['interviewType'] = interviewType;
+    }
+    if (difficultyLevel != null) {
+      filters['difficultyLevel'] = difficultyLevel;
+    }
+    if (completed != null) {
+      filters['completed'] = completed;
+    }
+    if (minScore != null) {
+      filters['minScore'] = minScore;
+    }
 
     final response = await getUserPracticeSessions(
       userId,
@@ -453,10 +461,12 @@ class InterviewPracticeService extends BasePracticeService {
     String? difficultyLevel,
   }) async {
     final additionalFilters = <String, dynamic>{};
-    if (interviewType != null)
+    if (interviewType != null) {
       additionalFilters['interviewType'] = interviewType;
-    if (difficultyLevel != null)
+    }
+    if (difficultyLevel != null) {
       additionalFilters['difficultyLevel'] = difficultyLevel;
+    }
 
     final response = await getUserPracticeStats(
       userId,

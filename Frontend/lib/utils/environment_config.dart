@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class EnvironmentConfig {
   // =========================
   // Flags de compilación
@@ -12,8 +14,8 @@ class EnvironmentConfig {
   // =========================
   // URLs base por defecto (ambas ramas)
   // =========================
-  static const String _tunnelApiUrl   = 'https://d1151c2af665.ngrok-free.app';
-  static const String _localApiUrl    = 'http://10.0.2.2:3000';
+  static const String _tunnelApiUrl = 'https://d1151c2af665.ngrok-free.app';
+  static const String _localApiUrl = 'http://10.0.2.2:3000';
 
   // Versión de API (se puede sobreescribir con API_VERSION)
   static const String _defaultApiVersion = 'api/v1';
@@ -38,30 +40,24 @@ class EnvironmentConfig {
   // =========================
   // Endpoints comunes
   // =========================
-  static String get authEndpoint   => '$fullApiUrl/auth';
-  static String get usersEndpoint  => '$fullApiUrl/users';
-  static String get personsEndpoint=> '$fullApiUrl/persons';
+  static String get authEndpoint => '$fullApiUrl/auth';
+  static String get usersEndpoint => '$fullApiUrl/users';
+  static String get personsEndpoint => '$fullApiUrl/persons';
 
   // Endpoints específicos
-  static String get registerEndpoint     => '$fullApiUrl/auth/register';
-  static String get loginEndpoint        => '$fullApiUrl/auth/login';
+  static String get registerEndpoint => '$fullApiUrl/auth/register';
+  static String get loginEndpoint => '$fullApiUrl/auth/login';
   static String get refreshTokenEndpoint => '$fullApiUrl/auth/refresh';
 
   // =========================
   // Flags de entorno
   // =========================
   static bool get isDevelopment {
-    return const bool.fromEnvironment(
-      'DEVELOPMENT_MODE',
-      defaultValue: true,
-    );
+    return const bool.fromEnvironment('DEVELOPMENT_MODE', defaultValue: true);
   }
 
   static bool get enableLogging {
-    return const bool.fromEnvironment(
-      'ENABLE_API_LOGGING',
-      defaultValue: true,
-    );
+    return const bool.fromEnvironment('ENABLE_API_LOGGING', defaultValue: true);
   }
 
   // =========================

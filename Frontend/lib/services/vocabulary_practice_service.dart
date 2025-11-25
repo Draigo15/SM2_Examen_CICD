@@ -201,14 +201,27 @@ class VocabularyPracticeService extends BasePracticeService {
   }) async {
     final updateData = <String, dynamic>{};
 
-    if (progress != null) updateData['progress'] = progress;
-    if (score != null) updateData['score'] = score;
-    if (status != null) updateData['status'] = status;
-    if (wordsStudied != null) updateData['wordsStudied'] = wordsStudied;
-    if (wordsLearned != null) updateData['wordsLearned'] = wordsLearned;
-    if (correctAnswers != null) updateData['correctAnswers'] = correctAnswers;
-    if (incorrectAnswers != null)
+    if (progress != null) {
+      updateData['progress'] = progress;
+    }
+    if (score != null) {
+      updateData['score'] = score;
+    }
+    if (status != null) {
+      updateData['status'] = status;
+    }
+    if (wordsStudied != null) {
+      updateData['wordsStudied'] = wordsStudied;
+    }
+    if (wordsLearned != null) {
+      updateData['wordsLearned'] = wordsLearned;
+    }
+    if (correctAnswers != null) {
+      updateData['correctAnswers'] = correctAnswers;
+    }
+    if (incorrectAnswers != null) {
       updateData['incorrectAnswers'] = incorrectAnswers;
+    }
     if (studiedWords != null) {
       updateData['studiedWords'] = studiedWords
           .map((word) => word.toJson())
@@ -298,8 +311,9 @@ class VocabularyPracticeService extends BasePracticeService {
     String? difficultyLevel,
   }) async {
     final additionalFilters = <String, dynamic>{};
-    if (difficultyLevel != null)
+    if (difficultyLevel != null) {
       additionalFilters['difficultyLevel'] = difficultyLevel;
+    }
 
     final response = await getUserPracticeStats(
       userId,

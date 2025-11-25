@@ -45,7 +45,6 @@ void main() {
     group('Critical Chapters 4 & 5 Tests', () {
       test('should validate Chapter 4 requires 100% threshold', () {
         // Arrange
-        const chapterId = '4';
         const expectedThreshold = 100;
         const score99 = 99;
         const score100 = 100;
@@ -59,7 +58,6 @@ void main() {
 
       test('should validate Chapter 5 requires 100% threshold', () {
         // Arrange
-        const chapterId = '5';
         const expectedThreshold = 100;
         const score99 = 99;
         const score100 = 100;
