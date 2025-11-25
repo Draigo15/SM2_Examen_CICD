@@ -81,23 +81,23 @@ class EnvironmentConfig {
   static void logConfiguration() {
     if (isDevelopment) {
       // ignore: avoid_print
-      print('=== Environment Configuration ===');
+      debugPrint('=== Environment Configuration ===');
       // ignore: avoid_print
-      print('USE_TUNNEL: $_useTunnel');
+      debugPrint('USE_TUNNEL: $_useTunnel');
       // ignore: avoid_print
-      print('API Base URL: $apiBaseUrl');
+      debugPrint('API Base URL: $apiBaseUrl');
       // ignore: avoid_print
-      print('API Version: $apiVersion');
+      debugPrint('API Version: $apiVersion');
       // ignore: avoid_print
-      print('Full API URL: $fullApiUrl');
+      debugPrint('Full API URL: $fullApiUrl');
       // ignore: avoid_print
-      print('Development Mode: $isDevelopment');
+      debugPrint('Development Mode: $isDevelopment');
       // ignore: avoid_print
-      print('Enable Logging: $enableLogging');
+      debugPrint('Enable Logging: $enableLogging');
       // ignore: avoid_print
-      print('API Timeout: ${apiTimeout.inSeconds}s');
+      debugPrint('API Timeout: ${apiTimeout.inSeconds}s');
       // ignore: avoid_print
-      print('================================');
+      debugPrint('================================');
     }
   }
 }

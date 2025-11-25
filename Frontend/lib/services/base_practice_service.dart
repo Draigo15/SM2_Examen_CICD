@@ -1,53 +1,30 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import '../utils/api_service.dart';
 import '../utils/environment_config.dart';
 
 abstract class BasePracticeService {
   final ApiService apiService = ApiService();
-  
+
   String get baseEndpoint;
-  
-  // Common headers for practice requests
-  Map<String, String> _getHeaders(String? token) {
-    final headers = <String, String>{
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-    
-    if (token != null) {
-      headers['Authorization'] = 'Bearer $token';
-    }
-    
-    return headers;
-  }
-  
+
   // Create a new practice session
   Future<ApiResponse> createPracticeSession(
     Map<String, dynamic> practiceData,
     String token,
   ) async {
     final endpoint = '${EnvironmentConfig.apiBaseUrl}/$baseEndpoint';
-    
-    return await apiService.post(
-      endpoint,
-      body: practiceData,
-      token: token,
-    );
+
+    return await apiService.post(endpoint, body: practiceData, token: token);
   }
-  
+
   // Get a specific practice session
-  Future<ApiResponse> getPracticeSession(
-    String sessionId,
-    String token,
-  ) async {
+  Future<ApiResponse> getPracticeSession(String sessionId, String token) async {
     final endpoint = '${EnvironmentConfig.apiBaseUrl}/$baseEndpoint/$sessionId';
-    
-    return await apiService.get(
-      endpoint,
-      token: token,
-    );
+
+    return await apiService.get(endpoint, token: token);
   }
-  
+
   // Update a practice session
   Future<ApiResponse> updatePracticeSession(
     String sessionId,
@@ -55,14 +32,10 @@ abstract class BasePracticeService {
     String token,
   ) async {
     final endpoint = '${EnvironmentConfig.apiBaseUrl}/$baseEndpoint/$sessionId';
-    
-    return await apiService.put(
-      endpoint,
-      body: updateData,
-      token: token,
-    );
+
+    return await apiService.put(endpoint, body: updateData, token: token);
   }
-  
+
   // Get user practice sessions
   Future<ApiResponse> getUserPracticeSessions(
     String userId,
@@ -71,11 +44,12 @@ abstract class BasePracticeService {
     int? limit,
     int? offset,
   }) async {
-    var endpoint = '${EnvironmentConfig.apiBaseUrl}/$baseEndpoint/user/$userId/sessions';
-    
+    var endpoint =
+        '${EnvironmentConfig.apiBaseUrl}/$baseEndpoint/user/$userId/sessions';
+
     // Add query parameters if provided
     final queryParams = <String, String>{};
-    
+
     if (filters != null) {
       filters.forEach((key, value) {
         if (value != null) {
@@ -83,28 +57,25 @@ abstract class BasePracticeService {
         }
       });
     }
-    
+
     if (limit != null) {
       queryParams['limit'] = limit.toString();
     }
-    
+
     if (offset != null) {
       queryParams['offset'] = offset.toString();
     }
-    
+
     if (queryParams.isNotEmpty) {
       final queryString = queryParams.entries
           .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
           .join('&');
       endpoint += '?$queryString';
     }
-    
-    return await apiService.get(
-      endpoint,
-      token: token,
-    );
+
+    return await apiService.get(endpoint, token: token);
   }
-  
+
   // Get user practice statistics
   Future<ApiResponse> getUserPracticeStats(
     String userId,
@@ -112,14 +83,15 @@ abstract class BasePracticeService {
     String? timeframe,
     Map<String, dynamic>? additionalFilters,
   }) async {
-    var endpoint = '${EnvironmentConfig.apiBaseUrl}/$baseEndpoint/user/$userId/stats';
-    
+    var endpoint =
+        '${EnvironmentConfig.apiBaseUrl}/$baseEndpoint/user/$userId/stats';
+
     final queryParams = <String, String>{};
-    
+
     if (timeframe != null) {
       queryParams['timeframe'] = timeframe;
     }
-    
+
     if (additionalFilters != null) {
       additionalFilters.forEach((key, value) {
         if (value != null) {
@@ -127,22 +99,22 @@ abstract class BasePracticeService {
         }
       });
     }
-    
+
     if (queryParams.isNotEmpty) {
       final queryString = queryParams.entries
           .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
           .join('&');
       endpoint += '?$queryString';
     }
-    
-    return await apiService.get(
-      endpoint,
-      token: token,
-    );
+
+    return await apiService.get(endpoint, token: token);
   }
-  
+
   // Helper method to handle API responses
-  T? parseResponse<T>(ApiResponse response, T Function(Map<String, dynamic>) fromJson) {
+  T? parseResponse<T>(
+    ApiResponse response,
+    T Function(Map<String, dynamic>) fromJson,
+  ) {
     if (response.success && response.data != null) {
       try {
         if (response.data is Map<String, dynamic>) {
@@ -155,19 +127,22 @@ abstract class BasePracticeService {
         }
       } catch (e) {
         if (EnvironmentConfig.enableLogging) {
-          print('Error parsing response: $e');
+          debugPrint('Error parsing response: $e');
         }
       }
     }
     return null;
   }
-  
+
   // Helper method to handle list responses
-  List<T> parseListResponse<T>(ApiResponse response, T Function(Map<String, dynamic>) fromJson) {
+  List<T> parseListResponse<T>(
+    ApiResponse response,
+    T Function(Map<String, dynamic>) fromJson,
+  ) {
     if (response.success && response.data != null) {
       try {
         List<dynamic> dataList;
-        
+
         if (response.data is List) {
           dataList = response.data as List<dynamic>;
         } else if (response.data is String) {
@@ -180,14 +155,14 @@ abstract class BasePracticeService {
         } else {
           return [];
         }
-        
+
         return dataList
             .whereType<Map<String, dynamic>>()
             .map((item) => fromJson(item))
             .toList();
       } catch (e) {
         if (EnvironmentConfig.enableLogging) {
-          print('Error parsing list response: $e');
+          debugPrint('Error parsing list response: $e');
         }
       }
     }

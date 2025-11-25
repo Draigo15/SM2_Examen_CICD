@@ -64,9 +64,9 @@ class AudioService {
       await _loadAvailableVoices();
 
       _isInitialized = true;
-      if (kDebugMode) print('AudioService initialized successfully');
+      if (kDebugMode) debugPrint('AudioService initialized successfully');
     } catch (e) {
-      if (kDebugMode) print('Error initializing AudioService: $e');
+      if (kDebugMode) debugPrint('Error initializing AudioService: $e');
       throw Exception('Failed to initialize AudioService: $e');
     }
   }
@@ -92,7 +92,7 @@ class AudioService {
 
     _flutterTts.setErrorHandler((msg) {
       _isSpeaking = false;
-      if (kDebugMode) print('TTS Error: $msg');
+      if (kDebugMode) debugPrint('TTS Error: $msg');
     });
   }
 
@@ -100,7 +100,7 @@ class AudioService {
     try {
       _availableLanguages = await _flutterTts.getLanguages ?? [];
     } catch (e) {
-      if (kDebugMode) print('Error loading languages: $e');
+      if (kDebugMode) debugPrint('Error loading languages: $e');
       _availableLanguages = [];
     }
   }
@@ -109,7 +109,7 @@ class AudioService {
     try {
       _availableVoices = await _flutterTts.getVoices ?? [];
     } catch (e) {
-      if (kDebugMode) print('Error loading voices: $e');
+      if (kDebugMode) debugPrint('Error loading voices: $e');
       _availableVoices = [];
     }
   }
@@ -119,7 +119,7 @@ class AudioService {
     try {
       if (!_isInitialized) await initialize();
       if (text.trim().isEmpty) {
-        if (kDebugMode) print('Cannot speak empty text');
+        if (kDebugMode) debugPrint('Cannot speak empty text');
         return false;
       }
 
@@ -130,10 +130,10 @@ class AudioService {
       }
 
       final result = await _flutterTts.speak(text);
-      if (kDebugMode) print('Speaking: "$text" in $_currentLanguage');
+      if (kDebugMode) debugPrint('Speaking: "$text" in $_currentLanguage');
       return result == 1;
     } catch (e) {
-      if (kDebugMode) print('Error speaking text: $e');
+      if (kDebugMode) debugPrint('Error speaking text: $e');
       return false;
     }
   }
@@ -143,7 +143,7 @@ class AudioService {
     try {
       if (!_isInitialized) await initialize();
       if (audioUrl.trim().isEmpty) {
-        if (kDebugMode) print('Cannot play empty audio URL');
+        if (kDebugMode) debugPrint('Cannot play empty audio URL');
         return false;
       }
 
@@ -155,10 +155,10 @@ class AudioService {
       _audioPlayer.onPlayerComplete.listen((_) => _isPlaying = false);
 
       await _audioPlayer.play(UrlSource(audioUrl));
-      if (kDebugMode) print('Playing audio from URL: $audioUrl');
+      if (kDebugMode) debugPrint('Playing audio from URL: $audioUrl');
       return true;
     } catch (e) {
-      if (kDebugMode) print('Error playing audio: $e');
+      if (kDebugMode) debugPrint('Error playing audio: $e');
       return false;
     }
   }
@@ -220,12 +220,12 @@ class AudioService {
       final result = await _flutterTts.setLanguage(supported);
       if (result == 1) {
         _currentLanguage = supported;
-        if (kDebugMode) print('Language set to: $supported');
+        if (kDebugMode) debugPrint('Language set to: $supported');
         return true;
       }
       return false;
     } catch (e) {
-      if (kDebugMode) print('Error setting language: $e');
+      if (kDebugMode) debugPrint('Error setting language: $e');
       return false;
     }
   }
@@ -293,7 +293,7 @@ class AudioService {
       final langs = await _flutterTts.getLanguages;
       return List<String>.from(langs ?? []);
     } catch (e) {
-      if (kDebugMode) print('Error getting available languages: $e');
+      if (kDebugMode) debugPrint('Error getting available languages: $e');
       return [];
     }
   }
@@ -326,10 +326,10 @@ class AudioService {
       results['languageChange'] = await setLanguage('es-ES');
       await setLanguage('en-US'); // back
 
-      if (kDebugMode) print('Audio test results: $results');
+      if (kDebugMode) debugPrint('Audio test results: $results');
       return results;
     } catch (e) {
-      if (kDebugMode) print('Audio test failed: $e');
+      if (kDebugMode) debugPrint('Audio test failed: $e');
       results['error'] = false;
       return results;
     }
@@ -340,6 +340,6 @@ class AudioService {
     await stop();
     await _audioPlayer.dispose();
     _isInitialized = false;
-    if (kDebugMode) print('AudioService disposed');
+    if (kDebugMode) debugPrint('AudioService disposed');
   }
 }

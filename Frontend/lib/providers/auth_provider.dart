@@ -127,8 +127,8 @@ class AuthProvider with ChangeNotifier {
       // Log configuration for debugging
       if (EnvironmentConfig.isDevelopment) {
         EnvironmentConfig.logConfiguration();
-        print('🔄 Making login request to: ${EnvironmentConfig.loginEndpoint}');
-        print('📤 Request body: $requestBody');
+        debugPrint('🔄 Making login request to: ${EnvironmentConfig.loginEndpoint}');
+        debugPrint('📤 Request body: $requestBody');
       }
       
       // Make API call to backend
@@ -139,8 +139,8 @@ class AuthProvider with ChangeNotifier {
       );
       
       if (EnvironmentConfig.isDevelopment) {
-        print('📥 Login response: ${response.statusCode} - ${response.message}');
-        print('📊 Response data: ${response.data}');
+        debugPrint('📥 Login response: ${response.statusCode} - ${response.message}');
+        debugPrint('📊 Response data: ${response.data}');
       }
       
       if (response.success) {
@@ -179,7 +179,7 @@ class AuthProvider with ChangeNotifier {
       }
     } catch (e) {
       if (EnvironmentConfig.isDevelopment) {
-        print('❌ Login error: $e');
+        debugPrint('❌ Login error: $e');
       }
       _authState = AuthState.unauthenticated;
       _errorMessage = e.toString().replaceFirst('Exception: ', '');

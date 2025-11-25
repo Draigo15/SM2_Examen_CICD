@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/reading_chapters_provider.dart';
 import '../providers/lives_provider.dart';
-import '../providers/auth_provider.dart';
+
 import '../models/reading_chapter.dart';
 import '../widgets/reading_chapter_card.dart';
 import '../widgets/app_banner.dart';
@@ -31,25 +31,29 @@ class _ReadingChaptersScreenState extends State<ReadingChaptersScreen> {
   Future<void> _loadChapters() async {
     if (!mounted) return;
     try {
-      final provider = Provider.of<ReadingChaptersProvider>(context, listen: false);
+      final provider = Provider.of<ReadingChaptersProvider>(
+        context,
+        listen: false,
+      );
       await provider.fetchChapters();
     } catch (e) {
-      print('Error loading reading chapters: $e');
+      debugPrint('Error loading reading chapters: $e');
     }
   }
 
   Future<void> _refreshChapters() async {
     if (!mounted) return;
-    final provider = Provider.of<ReadingChaptersProvider>(context, listen: false);
+    final provider = Provider.of<ReadingChaptersProvider>(
+      context,
+      listen: false,
+    );
     await provider.refreshChapters();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final chaptersProvider = Provider.of<ReadingChaptersProvider>(context);
     final livesProvider = Provider.of<LivesProvider>(context);
-    final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
@@ -59,7 +63,8 @@ class _ReadingChaptersScreenState extends State<ReadingChaptersScreen> {
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Theme.of(context).colorScheme.primary,
-          statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+          statusBarIconBrightness:
+              Theme.of(context).brightness == Brightness.dark
               ? Brightness.light
               : Brightness.dark,
           statusBarBrightness: Theme.of(context).brightness,
@@ -70,9 +75,7 @@ class _ReadingChaptersScreenState extends State<ReadingChaptersScreen> {
         child: Consumer<ReadingChaptersProvider>(
           builder: (context, provider, child) {
             if (provider.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (provider.hasError) {
@@ -136,30 +139,29 @@ class _ReadingChaptersScreenState extends State<ReadingChaptersScreen> {
                   child: CustomScrollView(
                     slivers: [
                       // Progress Header
-                      SliverToBoxAdapter(
-                        child: _buildProgressHeader(provider),
-                      ),
+                      SliverToBoxAdapter(child: _buildProgressHeader(provider)),
 
                       // Chapters Grid
                       SliverPadding(
                         padding: const EdgeInsets.all(16),
                         sliver: SliverGrid(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 0.75,
-                          ),
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final chapter = provider.chapters[index];
-                              return ReadingChapterCard(
-                                chapter: chapter,
-                                onTap: () => _onChapterTap(context, chapter),
-                              );
-                            },
-                            childCount: provider.chapters.length,
-                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                                childAspectRatio: 0.75,
+                              ),
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final chapter = provider.chapters[index];
+                            return ReadingChapterCard(
+                              chapter: chapter,
+                              onTap: () => _onChapterTap(context, chapter),
+                            );
+                          }, childCount: provider.chapters.length),
                         ),
                       ),
                     ],
@@ -179,10 +181,7 @@ class _ReadingChaptersScreenState extends State<ReadingChaptersScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Colors.blue.shade700,
-            Colors.blue.shade500,
-          ],
+          colors: [Colors.blue.shade700, Colors.blue.shade500],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -197,11 +196,7 @@ class _ReadingChaptersScreenState extends State<ReadingChaptersScreen> {
       ),
       child: Column(
         children: [
-          const Icon(
-            Icons.menu_book,
-            size: 48,
-            color: Colors.white,
-          ),
+          const Icon(Icons.menu_book, size: 48, color: Colors.white),
           const SizedBox(height: 12),
           Text(
             '${provider.completedChapters}/${provider.totalChapters}',
@@ -214,10 +209,7 @@ class _ReadingChaptersScreenState extends State<ReadingChaptersScreen> {
           const SizedBox(height: 4),
           Text(
             AppLocalizations.of(context)!.chaptersCompleted,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white70,
-            ),
+            style: const TextStyle(fontSize: 14, color: Colors.white70),
           ),
           const SizedBox(height: 16),
           ClipRRect(
@@ -232,10 +224,7 @@ class _ReadingChaptersScreenState extends State<ReadingChaptersScreen> {
           const SizedBox(height: 8),
           Text(
             '${provider.overallProgress.toStringAsFixed(0)}% ${AppLocalizations.of(context)!.completed}',
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.white70,
-            ),
+            style: const TextStyle(fontSize: 12, color: Colors.white70),
           ),
         ],
       ),
@@ -294,10 +283,7 @@ class _ReadingChaptersScreenState extends State<ReadingChaptersScreen> {
             if (livesProvider.nextReset != null)
               Text(
                 '${l10n.nextReset}: ${livesProvider.nextReset}',
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
           ],
         ),

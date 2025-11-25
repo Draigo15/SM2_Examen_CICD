@@ -20,23 +20,23 @@ enum LivesState {
 class LivesProvider with ChangeNotifier {
   final ApiService _apiService = ApiService();
   final AuthProvider _authProvider;
-  
+
   LivesState _livesState = LivesState.initial;
   DailyLivesModel? _dailyLives;
   String? _errorMessage;
   Timer? _refreshTimer;
-  
+
   // Offline handling
   final List<Map<String, dynamic>> _pendingActions = [];
   Timer? _retryTimer;
   bool _isOnline = true;
-  
+
   // Configuration
   static const Duration _refreshInterval = Duration(minutes: 5);
   static const int _maxRetryAttempts = 3;
   static const String _livesKey = 'cached_lives';
   static const String _pendingActionsKey = 'pending_lives_actions';
-  
+
   // Getters
   LivesState get livesState => _livesState;
   DailyLivesModel? get dailyLives => _dailyLives;
@@ -52,7 +52,9 @@ class LivesProvider with ChangeNotifier {
     if (_dailyLives?.nextReset == null) return 24;
 
     try {
-      final resetTime = DateTime.parse(_dailyLives!.nextReset!);
+      final lives = _dailyLives;
+      final next = lives?.nextReset;
+      final resetTime = DateTime.parse(next!);
       final now = DateTime.now();
       final difference = resetTime.difference(now);
 
@@ -88,7 +90,7 @@ class LivesProvider with ChangeNotifier {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Error loading cached lives: $e');
+        debugPrint('Error loading cached lives: $e');
       }
     }
   }
@@ -101,7 +103,7 @@ class LivesProvider with ChangeNotifier {
         await prefs.setString(_livesKey, json.encode(_dailyLives!.toJson()));
       } catch (e) {
         if (kDebugMode) {
-          print('Error caching lives: $e');
+          debugPrint('Error caching lives: $e');
         }
       }
     }
@@ -124,7 +126,7 @@ class LivesProvider with ChangeNotifier {
         _dailyLives = DailyLivesModel.fromJson(responseData);
         _setState(LivesState.loaded);
         await _cacheLives();
-        
+
         // Process any pending offline actions
         await _processPendingActions();
       } else {
@@ -174,7 +176,7 @@ class LivesProvider with ChangeNotifier {
       if (response.success) {
         final responseData = response.data;
         final consumeResponse = ConsumeLifeResponse.fromJson(responseData);
-        
+
         // Update the lives model with new data
         if (_dailyLives != null) {
           _dailyLives = _dailyLives!.copyWith(
@@ -184,11 +186,12 @@ class LivesProvider with ChangeNotifier {
           await _cacheLives();
         }
 
-        _setState(consumeResponse.hasLivesAvailable 
-            ? LivesState.consumed 
-            : LivesState.blocked);
+        _setState(
+          consumeResponse.hasLivesAvailable
+              ? LivesState.consumed
+              : LivesState.blocked,
+        );
         return true;
-        
       } else if (response.statusCode == 403) {
         // No lives available
         final errorData = response.data;
@@ -196,7 +199,6 @@ class LivesProvider with ChangeNotifier {
         _handleError(noLivesError.message);
         _setState(LivesState.blocked);
         return false;
-        
       } else {
         _handleApiError(response);
         return false;
@@ -218,19 +220,22 @@ class LivesProvider with ChangeNotifier {
   }
 
   /// Queue an action for offline processing
-  Future<void> _queueOfflineAction(String action, Map<String, dynamic> data) async {
+  Future<void> _queueOfflineAction(
+    String action,
+    Map<String, dynamic> data,
+  ) async {
     final actionData = {
       'action': action,
       'data': data,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'attempts': 0,
     };
-    
+
     _pendingActions.add(actionData);
     await _savePendingActions();
-    
+
     if (kDebugMode) {
-      print('Queued offline action: $action');
+      debugPrint('Queued offline action: $action');
     }
   }
 
@@ -246,7 +251,7 @@ class LivesProvider with ChangeNotifier {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Error loading pending actions: $e');
+        debugPrint('Error loading pending actions: $e');
       }
     }
   }
@@ -258,7 +263,7 @@ class LivesProvider with ChangeNotifier {
       await prefs.setString(_pendingActionsKey, json.encode(_pendingActions));
     } catch (e) {
       if (kDebugMode) {
-        print('Error saving pending actions: $e');
+        debugPrint('Error saving pending actions: $e');
       }
     }
   }
@@ -268,7 +273,7 @@ class LivesProvider with ChangeNotifier {
     if (_pendingActions.isEmpty) return;
 
     final actionsToProcess = List<Map<String, dynamic>>.from(_pendingActions);
-    
+
     for (final action in actionsToProcess) {
       final attempts = action['attempts'] as int;
       if (attempts >= _maxRetryAttempts) {
@@ -280,12 +285,16 @@ class LivesProvider with ChangeNotifier {
         await _processAction(action);
         _pendingActions.remove(action);
         if (kDebugMode) {
-          print('Successfully processed offline action: ${action['action']}');
+          debugPrint(
+            'Successfully processed offline action: ${action['action']}',
+          );
         }
       } catch (e) {
         action['attempts'] = attempts + 1;
         if (kDebugMode) {
-          print('Failed to process action ${action['action']}, attempt ${attempts + 1}: $e');
+          debugPrint(
+            'Failed to process action ${action['action']}, attempt ${attempts + 1}: $e',
+          );
         }
       }
     }
@@ -302,7 +311,7 @@ class LivesProvider with ChangeNotifier {
         break;
       default:
         if (kDebugMode) {
-          print('Unknown action type: ${action['action']}');
+          debugPrint('Unknown action type: ${action['action']}');
         }
     }
   }
@@ -354,7 +363,7 @@ class LivesProvider with ChangeNotifier {
     _errorMessage = message;
     _setState(LivesState.error);
     if (kDebugMode) {
-      print('LivesProvider Error: $message');
+      debugPrint('LivesProvider Error: $message');
     }
   }
 

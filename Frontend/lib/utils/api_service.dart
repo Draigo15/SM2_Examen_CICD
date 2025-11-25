@@ -34,10 +34,10 @@ class ApiService {
   void _logRequest(String method, String url, Map<String, dynamic>? body) {
     if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
       // ignore: avoid_print
-      print('🔄 API $method: $url');
+      debugPrint('🔄 API $method: $url');
       if (body != null) {
         // ignore: avoid_print
-        print('📤 Request Body: ${jsonEncode(body)}');
+        debugPrint('📤 Request Body: ${jsonEncode(body)}');
       }
     }
   }
@@ -46,7 +46,7 @@ class ApiService {
   void _logResponse(http.Response response) {
     if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
       // ignore: avoid_print
-      print('📥 Response ${response.statusCode}: ${response.body}');
+      debugPrint('📥 Response ${response.statusCode}: ${response.body}');
     }
   }
   
@@ -78,7 +78,7 @@ class ApiService {
     } catch (e) {
       if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
         // ignore: avoid_print
-        print('❌ API Error: $e');
+        debugPrint('❌ API Error: $e');
       }
       return ApiResponse(
         statusCode: 0,
@@ -115,7 +115,7 @@ class ApiService {
     } catch (e) {
       if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
         // ignore: avoid_print
-        print('❌ API Error: $e');
+        debugPrint('❌ API Error: $e');
       }
       return ApiResponse(
         statusCode: 0,
@@ -154,7 +154,7 @@ class ApiService {
     } catch (e) {
       if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
         // ignore: avoid_print
-        print('❌ API Error: $e');
+        debugPrint('❌ API Error: $e');
       }
       return ApiResponse(
         statusCode: 0,
@@ -191,7 +191,7 @@ class ApiService {
     } catch (e) {
       if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
         // ignore: avoid_print
-        print('❌ API Error: $e');
+        debugPrint('❌ API Error: $e');
       }
       return ApiResponse(
         statusCode: 0,

@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/quiz_question.dart';
 import '../services/quiz_practice_service.dart';
 
-import 'approval_provider.dart';
 import 'progress_provider.dart';
 
 class QuizProvider with ChangeNotifier {
@@ -14,7 +12,7 @@ class QuizProvider with ChangeNotifier {
   final ProgressProvider? _progressProvider;
   final QuizPracticeService _quizService = QuizPracticeService();
   final String _chapterId;
-  
+
   int _currentQuestionIndex = 0;
   int? _selectedOption;
   int _score = 100;
@@ -22,7 +20,7 @@ class QuizProvider with ChangeNotifier {
   bool _showResult = false;
   QuizPracticeSession? _currentSession;
   bool _isLoading = false;
-  
+
   QuizProvider({
     ProgressProvider? progressProvider,
     String chapterId = 'default-chapter',
@@ -51,7 +49,7 @@ class QuizProvider with ChangeNotifier {
     if (_selectedOption != null && !_hasAnswered) {
       _hasAnswered = true;
       _showResult = true;
-      
+
       // Check if answer is correct
       if (_selectedOption == currentQuestion.correctAnswer) {
         // Keep current score for correct answer
@@ -59,10 +57,14 @@ class QuizProvider with ChangeNotifier {
         // Deduct points for wrong answer (optional)
         _score = (_score - 20).clamp(0, 100);
       }
-      
+
       // Auto-save progress after answering
-      _progressProvider?.onQuizAnswered(_chapterId, _score.toDouble(), _currentQuestionIndex);
-      
+      _progressProvider?.onQuizAnswered(
+        _chapterId,
+        _score.toDouble(),
+        _currentQuestionIndex,
+      );
+
       notifyListeners();
     }
   }
@@ -71,9 +73,13 @@ class QuizProvider with ChangeNotifier {
     if (_currentQuestionIndex < _questions.length - 1) {
       _currentQuestionIndex++;
       _resetQuestionState();
-      
+
       // Auto-save progress when moving to next question
-      _progressProvider?.onQuizAnswered(_chapterId, _score.toDouble(), _currentQuestionIndex);
+      _progressProvider?.onQuizAnswered(
+        _chapterId,
+        _score.toDouble(),
+        _currentQuestionIndex,
+      );
     } else {
       // Quiz completed - save final progress with additional metadata
       Map<String, dynamic> quizData = {
@@ -82,33 +88,46 @@ class QuizProvider with ChangeNotifier {
         'questions_total': _questions.length,
         'completed_at': DateTime.now().toIso8601String(),
       };
-      
-      _progressProvider?.onChapterCompleted(_chapterId, _score.toDouble(), extraData: quizData);
-      
+
+      _progressProvider?.onChapterCompleted(
+        _chapterId,
+        _score.toDouble(),
+        extraData: quizData,
+      );
+
       // Also persist score in local storage for offline access
       _persistQuizScore(_chapterId, _score, quizData);
     }
   }
-  
+
   // Persist quiz score locally for offline access
-  Future<void> _persistQuizScore(String chapterId, int score, Map<String, dynamic> quizData) async {
+  Future<void> _persistQuizScore(
+    String chapterId,
+    int score,
+    Map<String, dynamic> quizData,
+  ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Store quiz scores by chapter
       final key = 'quiz_score_$chapterId';
       await prefs.setDouble(key, score.toDouble());
-      
+
       // Store quiz completion data
       final completionKey = 'quiz_completion_$chapterId';
       await prefs.setString(completionKey, jsonEncode(quizData));
-      
+
       // Store last completed quiz timestamp
-      await prefs.setString('last_completed_quiz', DateTime.now().toIso8601String());
-      
-      print('✅ Quiz score persisted locally: $score for chapter $chapterId');
+      await prefs.setString(
+        'last_completed_quiz',
+        DateTime.now().toIso8601String(),
+      );
+
+      debugPrint(
+        '✅ Quiz score persisted locally: $score for chapter $chapterId',
+      );
     } catch (e) {
-      print('❌ Error persisting quiz score: $e');
+      debugPrint('❌ Error persisting quiz score: $e');
     }
   }
 
@@ -130,11 +149,11 @@ class QuizProvider with ChangeNotifier {
   }
 
   bool isWrongAnswer(int optionIndex) {
-    return _hasAnswered && 
-           _selectedOption == optionIndex && 
-           optionIndex != currentQuestion.correctAnswer;
+    return _hasAnswered &&
+        _selectedOption == optionIndex &&
+        optionIndex != currentQuestion.correctAnswer;
   }
-  
+
   // Create a new quiz practice session
   Future<void> createQuizSession({
     required String userId,
@@ -146,7 +165,7 @@ class QuizProvider with ChangeNotifier {
   }) async {
     _isLoading = true;
     notifyListeners();
-    
+
     try {
       _currentSession = await _quizService.createQuizSession(
         token: token,
@@ -157,27 +176,27 @@ class QuizProvider with ChangeNotifier {
         difficultyLevel: difficultyLevel,
         totalQuestions: totalQuestions,
       );
-      
+
       if (_currentSession != null) {
         // Update local state based on session data
         _currentQuestionIndex = 0;
         _score = _currentSession!.score.toInt();
       }
     } catch (e) {
-      print('Error creating quiz session: $e');
+      debugPrint('Error creating quiz session: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
-  
+
   // Submit answer using the service
   Future<void> submitAnswerToService({
     required String token,
     required int timeSpentSeconds,
   }) async {
     if (_currentSession == null || _selectedOption == null) return;
-    
+
     try {
       _currentSession = await _quizService.answerQuestion(
         sessionId: _currentSession!.id,
@@ -186,42 +205,45 @@ class QuizProvider with ChangeNotifier {
         userAnswer: _selectedOption!,
         timeSpentSeconds: timeSpentSeconds,
       );
-      
+
       if (_currentSession != null) {
         _score = _currentSession!.score.toInt();
       }
-      
+
       notifyListeners();
     } catch (e) {
-      print('Error submitting answer: $e');
+      debugPrint('Error submitting answer: $e');
     }
   }
-  
+
   // Complete quiz session
   Future<void> completeQuizSession({
     required String token,
     required int totalTimeSpent,
   }) async {
     if (_currentSession == null) return;
-    
+
     try {
       _currentSession = await _quizService.completeQuiz(
         sessionId: _currentSession!.id,
         token: token,
         totalTimeSpent: totalTimeSpent,
       );
-      
+
       if (_currentSession != null) {
         // Save final progress
-        _progressProvider?.onChapterCompleted(_chapterId, _currentSession!.score);
+        _progressProvider?.onChapterCompleted(
+          _chapterId,
+          _currentSession!.score,
+        );
       }
-      
+
       notifyListeners();
     } catch (e) {
-      print('Error completing quiz: $e');
+      debugPrint('Error completing quiz: $e');
     }
   }
-  
+
   // Get user quiz statistics
   Future<QuizStats?> getUserStats({
     required String userId,
@@ -239,7 +261,7 @@ class QuizProvider with ChangeNotifier {
         difficultyLevel: difficultyLevel,
       );
     } catch (e) {
-      print('Error getting quiz stats: $e');
+      debugPrint('Error getting quiz stats: $e');
       return null;
     }
   }

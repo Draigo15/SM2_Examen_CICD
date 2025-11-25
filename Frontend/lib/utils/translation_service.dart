@@ -92,7 +92,7 @@ class TranslationService {
       }
     } catch (e) {
       if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
-        print('❌ Cache read error: $e');
+        debugPrint('❌ Cache read error: $e');
       }
     }
     return null;
@@ -109,7 +109,7 @@ class TranslationService {
       );
     } catch (e) {
       if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
-        print('❌ Cache write error: $e');
+        debugPrint('❌ Cache write error: $e');
       }
     }
   }
@@ -125,7 +125,7 @@ class TranslationService {
       );
     } catch (e) {
       if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
-        print('❌ Cache cleanup error: $e');
+        debugPrint('❌ Cache cleanup error: $e');
       }
     }
   }
@@ -238,7 +238,7 @@ class TranslationService {
       return maps.map((map) => Translation.fromLocalDb(map)).toList();
     } catch (e) {
       if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
-        print('❌ History fetch error: $e');
+        debugPrint('❌ History fetch error: $e');
       }
       return [];
     }
@@ -251,7 +251,7 @@ class TranslationService {
       await db.delete('translation_cache');
     } catch (e) {
       if (EnvironmentConfig.enableLogging && EnvironmentConfig.isDevelopment) {
-        print('❌ Cache clear error: $e');
+        debugPrint('❌ Cache clear error: $e');
       }
     }
   }

@@ -822,7 +822,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                             onPressed: () {
                               provider.previousQuestion();
                               HapticFeedback.lightImpact();
-                              SemanticsService.sendAnnouncement(
+                              SemanticsService.announce(
                                 'Pregunta anterior',
                                 TextDirection.ltr,
                               );
@@ -852,7 +852,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                             onPressed: () {
                               provider.nextQuestion();
                               HapticFeedback.lightImpact();
-                              SemanticsService.sendAnnouncement(
+                              SemanticsService.announce(
                                 'Siguiente pregunta',
                                 TextDirection.ltr,
                               );
@@ -912,10 +912,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          SemanticsService.sendAnnouncement(
-            provider.errorMessage!,
-            TextDirection.ltr,
-          );
+          SemanticsService.announce(provider.errorMessage!, TextDirection.ltr);
         }
       }
     } else {
@@ -946,10 +943,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       await AudioPlayer().play(AssetSource('sounds/correct_answer.mp3'));
 
       // Announce for screen readers
-      SemanticsService.sendAnnouncement(
-        '¡Respuesta correcta!',
-        TextDirection.ltr,
-      );
+      SemanticsService.announce('¡Respuesta correcta!', TextDirection.ltr);
 
       await Future.delayed(const Duration(milliseconds: 1000));
 
@@ -972,7 +966,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       await AudioPlayer().play(AssetSource('sounds/wrong_answer.mp3'));
 
       // Announce for screen readers
-      SemanticsService.sendAnnouncement(
+      SemanticsService.announce(
         'Respuesta incorrecta. Intenta de nuevo.',
         TextDirection.ltr,
       );
@@ -990,7 +984,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       await AudioPlayer().play(AssetSource('sounds/wrong_answer.mp3'));
 
       // Announce for screen readers
-      SemanticsService.sendAnnouncement(
+      SemanticsService.announce(
         'Respuesta incorrecta. Se mostrará la respuesta correcta.',
         TextDirection.ltr,
       );
@@ -1076,8 +1070,6 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
 
   /// Handle no lives remaining - save progress and go back
   Future<void> _handleNoLivesRemaining(ReadingContentProvider provider) async {
-    final l10n = AppLocalizations.of(context)!;
-
     // Save progress
     await provider.submitQuiz();
 
@@ -1276,7 +1268,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
           backgroundColor: Colors.red,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        SemanticsService.sendAnnouncement(errorMessage, TextDirection.ltr);
+        SemanticsService.announce(errorMessage, TextDirection.ltr);
       }
       return;
     }
