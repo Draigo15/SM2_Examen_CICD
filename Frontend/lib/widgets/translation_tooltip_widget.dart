@@ -104,19 +104,16 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
     );
 
     _scaleAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController!,
-        curve: Curves.easeOutBack,
-      ),
+      CurvedAnimation(parent: _animationController!, curve: Curves.easeOutBack),
     );
 
     _slideAnimation =
         Tween<Offset>(begin: const Offset(0, -0.15), end: Offset.zero).animate(
-      CurvedAnimation(
-        parent: _animationController!,
-        curve: Curves.easeOutCubic,
-      ),
-    );
+          CurvedAnimation(
+            parent: _animationController!,
+            curve: Curves.easeOutCubic,
+          ),
+        );
   }
 
   @override
@@ -259,23 +256,26 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
         ),
         padding: widget.tooltipPadding ?? const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: widget.tooltipBackgroundColor ??
+          color:
+              widget.tooltipBackgroundColor ??
               Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(widget.tooltipBorderRadius ?? 12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.15),
+              color: Colors.black.withValues(alpha: 0.15),
               blurRadius: 18,
               offset: const Offset(0, 8),
             ),
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
           ],
           border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.12),
+            color: Theme.of(
+              context,
+            ).colorScheme.outline.withValues(alpha: 0.12),
           ),
         ),
         child: Column(
@@ -303,9 +303,9 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
           child: Text(
             '${widget.sourceLanguage.toUpperCase()} → ${widget.targetLanguage.toUpperCase()}',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         const Spacer(),
@@ -313,16 +313,20 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
           icon: Icon(
             Icons.close,
             size: 18,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.7),
           ),
           onPressed: _hideTooltip,
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
           style: IconButton.styleFrom(
-            backgroundColor:
-                Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            backgroundColor: Theme.of(
+              context,
+            ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
           ),
         ),
       ],
@@ -350,11 +354,10 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
             Text(
               'Translating...',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
-                  ),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
             ),
           ],
         ),
@@ -365,19 +368,21 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
       return Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Theme.of(context)
-              .colorScheme
-              .errorContainer
-              .withOpacity(0.12),
+          color: Theme.of(
+            context,
+          ).colorScheme.errorContainer.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Theme.of(context).colorScheme.error.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.error.withValues(alpha: 0.2),
           ),
         ),
         child: Row(
           children: [
-            Icon(Icons.error_outline,
-                size: 20, color: Theme.of(context).colorScheme.error),
+            Icon(
+              Icons.error_outline,
+              size: 20,
+              color: Theme.of(context).colorScheme.error,
+            ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -400,12 +405,11 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
           child: Text(
             'Tap to translate',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontStyle: FontStyle.italic,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withOpacity(0.6),
-                ),
+              fontStyle: FontStyle.italic,
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
           ),
         ),
       );
@@ -419,15 +423,16 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
           width: double.infinity,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color:
-                Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            color: Theme.of(
+              context,
+            ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
             widget.text,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
           ),
@@ -440,11 +445,12 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
             Expanded(
               child: Text(
                 _translation!.translatedText,
-                style: widget.tooltipTextStyle ??
+                style:
+                    widget.tooltipTextStyle ??
                     Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
               ),
             ),
             if (widget.enablePronunciation &&
@@ -457,20 +463,17 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .secondaryContainer
-                  .withOpacity(0.3),
+              color: Theme.of(
+                context,
+              ).colorScheme.secondaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
               '/${_translation!.pronunciation}/',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontStyle: FontStyle.italic,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSecondaryContainer,
-                  ),
+                fontStyle: FontStyle.italic,
+                color: Theme.of(context).colorScheme.onSecondaryContainer,
+              ),
             ),
           ),
         ],
@@ -480,14 +483,14 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
             width: double.infinity,
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .tertiaryContainer
-                  .withOpacity(0.2),
+              color: Theme.of(
+                context,
+              ).colorScheme.tertiaryContainer.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color:
-                    Theme.of(context).colorScheme.tertiary.withOpacity(0.2),
+                color: Theme.of(
+                  context,
+                ).colorScheme.tertiary.withValues(alpha: 0.2),
               ),
             ),
             child: Column(
@@ -495,30 +498,27 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
               children: [
                 Row(
                   children: [
-                    Icon(Icons.lightbulb_outline,
-                        size: 16,
-                        color: Theme.of(context).colorScheme.tertiary),
+                    Icon(
+                      Icons.lightbulb_outline,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       'Example:',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium
-                          ?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .tertiary,
-                          ),
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 6),
                 Text(
                   _translation!.examples.first,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontStyle: FontStyle.italic,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -537,16 +537,13 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
         icon: const Icon(Icons.volume_up, size: 20),
         onPressed: _playPronunciation,
         style: IconButton.styleFrom(
-          backgroundColor: Theme.of(context)
-              .colorScheme
-              .primaryContainer
-              .withOpacity(0.5),
-          foregroundColor:
-              Theme.of(context).colorScheme.onPrimaryContainer,
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.primaryContainer.withValues(alpha: 0.5),
+          foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
           padding: const EdgeInsets.all(8),
           minimumSize: const Size(36, 36),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         tooltip: 'Play pronunciation',
       ),
@@ -567,8 +564,7 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
-            color:
-                Theme.of(context).colorScheme.outline.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
           ),
         ),
       ),
@@ -584,12 +580,9 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
           if (widget.enableFavorites)
             Consumer<FavoritesProvider>(
               builder: (context, favoritesProvider, child) {
-                final isFavorite =
-                    favoritesProvider.isFavorite(widget.text);
+                final isFavorite = favoritesProvider.isFavorite(widget.text);
                 return _buildActionButton(
-                  icon: isFavorite
-                      ? Icons.favorite
-                      : Icons.favorite_border,
+                  icon: isFavorite ? Icons.favorite : Icons.favorite_border,
                   label: isFavorite ? 'Saved' : 'Save',
                   onPressed: () => _toggleFavorite(favoritesProvider),
                   color: isFavorite ? Colors.red : null,
@@ -624,22 +617,22 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
             Icon(
               icon,
               size: 18,
-              color: color ??
-                  Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withOpacity(0.7),
+              color:
+                  color ??
+                  Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
             ),
             const SizedBox(height: 4),
             Text(
               label,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: color ??
-                        Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.7),
-                  ),
+                color:
+                    color ??
+                    Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
             ),
           ],
         ),
@@ -649,9 +642,7 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
 
   void _copyTranslation() {
     if (_translation == null) return;
-    Clipboard.setData(
-      ClipboardData(text: _translation!.translatedText),
-    );
+    Clipboard.setData(ClipboardData(text: _translation!.translatedText));
     HapticFeedback.selectionClick();
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -725,9 +716,7 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
     }
   }
 
-  Future<void> _toggleFavorite(
-    FavoritesProvider favoritesProvider,
-  ) async {
+  Future<void> _toggleFavorite(FavoritesProvider favoritesProvider) async {
     if (_translation == null) return;
 
     try {
@@ -763,7 +752,11 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
 
         await favoritesProvider.addToFavorites(fav);
         if (mounted) {
-          _toast('Added to favorites', icon: Icons.favorite, iconColor: Colors.red);
+          _toast(
+            'Added to favorites',
+            icon: Icons.favorite,
+            iconColor: Colors.red,
+          );
         }
       }
     } catch (e) {
@@ -836,24 +829,23 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withOpacity(0.3),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
               // Header
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
                     Text(
                       'Translation Details',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
+                      style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.w600),
                     ),
                     const Spacer(),
@@ -861,8 +853,9 @@ class _TranslationTooltipWidgetState extends State<TranslationTooltipWidget>
                       icon: const Icon(Icons.close),
                       onPressed: () => Navigator.of(context).pop(),
                       style: IconButton.styleFrom(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.surfaceContainerHighest,
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerHighest,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

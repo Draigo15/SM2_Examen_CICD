@@ -9,7 +9,7 @@ import '../models/highlighted_word.dart';
 
 class ReadingScreen extends StatelessWidget {
   final String chapterId;
-  
+
   const ReadingScreen({super.key, this.chapterId = 'reading-chapter-1'});
 
   @override
@@ -37,7 +37,7 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
   bool _isPaused = false;
   double _speechRate = 0.5;
   double _volume = 1.0;
-  
+
   // Variables para el resaltado de texto
   bool _enableVocabularyHighlights = true;
   bool _enableGrammarHighlights = false;
@@ -66,9 +66,9 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
 
     await _audioService.setSpeechRate(_speechRate);
     await _audioService.setVolume(_volume);
-    
+
     final success = await _audioService.speakText(text, language: 'en-US');
-    
+
     if (mounted) {
       setState(() {
         _isPlaying = false;
@@ -141,7 +141,7 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                   word.type.name,
                   style: const TextStyle(fontSize: 12),
                 ),
-                backgroundColor: word.type.color.withOpacity(0.2),
+                backgroundColor: word.type.color.withValues(alpha: 0.2),
               ),
             ],
           ),
@@ -152,25 +152,16 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
               if (word.definition != null) ...[
                 const Text(
                   'Definición:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  word.definition!,
-                  style: const TextStyle(fontSize: 14),
-                ),
+                Text(word.definition!, style: const TextStyle(fontSize: 14)),
                 const SizedBox(height: 12),
               ],
               if (word.translation != null) ...[
                 const Text(
                   'Traducción:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -221,7 +212,9 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                 _showHighlightConfig = !_showHighlightConfig;
               });
             },
-            tooltip: _showHighlightConfig ? 'Ocultar configuración' : 'Configurar resaltado',
+            tooltip: _showHighlightConfig
+                ? 'Ocultar configuración'
+                : 'Configurar resaltado',
           ),
           Consumer<ReadingProvider>(
             builder: (context, readingProvider, child) {
@@ -260,10 +253,13 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                   children: [
                     Text(
                       readingProvider.chapter.title,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimaryContainer,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -275,7 +271,9 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                     const SizedBox(height: 8),
                     LinearProgressIndicator(
                       value: readingProvider.readingProgress,
-                      backgroundColor: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.outline.withValues(alpha: 0.3),
                       valueColor: AlwaysStoppedAnimation<Color>(
                         Theme.of(context).colorScheme.primary,
                       ),
@@ -306,7 +304,9 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                               end: Alignment.bottomRight,
                               colors: [
                                 Theme.of(context).colorScheme.surface,
-                                Theme.of(context).colorScheme.surfaceContainerHighest,
+                                Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHighest,
                               ],
                             ),
                           ),
@@ -314,38 +314,65 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 6,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.primaryContainer,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primaryContainer,
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Text(
                                       'Paragraph ${readingProvider.currentParagraph.paragraphNumber}',
-                                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimaryContainer,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
                                       color: _isPlaying
-                                          ? Theme.of(context).colorScheme.errorContainer
-                                          : Theme.of(context).colorScheme.secondaryContainer,
+                                          ? Theme.of(
+                                              context,
+                                            ).colorScheme.errorContainer
+                                          : Theme.of(
+                                              context,
+                                            ).colorScheme.secondaryContainer,
                                       shape: BoxShape.circle,
                                     ),
                                     child: IconButton(
-                                      onPressed: () => _speakText(readingProvider.currentParagraph.content),
-                                      icon: Icon(
-                                        _isPlaying ? Icons.stop : Icons.volume_up,
-                                        color: _isPlaying
-                                            ? Theme.of(context).colorScheme.onErrorContainer
-                                            : Theme.of(context).colorScheme.onSecondaryContainer,
+                                      onPressed: () => _speakText(
+                                        readingProvider
+                                            .currentParagraph
+                                            .content,
                                       ),
-                                      tooltip: _isPlaying ? 'Detener lectura' : 'Leer en voz alta',
+                                      icon: Icon(
+                                        _isPlaying
+                                            ? Icons.stop
+                                            : Icons.volume_up,
+                                        color: _isPlaying
+                                            ? Theme.of(
+                                                context,
+                                              ).colorScheme.onErrorContainer
+                                            : Theme.of(context)
+                                                  .colorScheme
+                                                  .onSecondaryContainer,
+                                      ),
+                                      tooltip: _isPlaying
+                                          ? 'Detener lectura'
+                                          : 'Leer en voz alta',
                                     ),
                                   ),
                                 ],
@@ -353,13 +380,16 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                               const SizedBox(height: 20),
                               HighlightedTextWidget(
                                 text: readingProvider.currentParagraph.content,
-                                textStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  height: 1.8,
-                                  fontSize: 17,
-                                  letterSpacing: 0.3,
-                                ),
-                                enableVocabularyHighlights: _enableVocabularyHighlights,
-                                enableGrammarHighlights: _enableGrammarHighlights,
+                                textStyle: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(
+                                      height: 1.8,
+                                      fontSize: 17,
+                                      letterSpacing: 0.3,
+                                    ),
+                                enableVocabularyHighlights:
+                                    _enableVocabularyHighlights,
+                                enableGrammarHighlights:
+                                    _enableGrammarHighlights,
                                 onWordTap: _onWordTap,
                                 showTooltips: false,
                               ),
@@ -381,9 +411,12 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                       ],
 
                       // Reading Complete Message
-                      if (readingProvider.isReadingComplete && !readingProvider.isQuizComplete) ...[
+                      if (readingProvider.isReadingComplete &&
+                          !readingProvider.isQuizComplete) ...[
                         Card(
-                          color: Theme.of(context).colorScheme.secondaryContainer,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
                           child: Padding(
                             padding: const EdgeInsets.all(16),
                             child: Column(
@@ -391,32 +424,45 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                                 Icon(
                                   Icons.menu_book,
                                   size: 48,
-                                  color: Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   'Reading Complete!',
-                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: Theme.of(context).textTheme.titleLarge
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSecondaryContainer,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   'Now take the quiz to complete this chapter.',
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSecondaryContainer,
+                                      ),
                                 ),
                                 const SizedBox(height: 16),
                                 ElevatedButton.icon(
-                                  onPressed: () => _showQuizDialog(context, readingProvider),
+                                  onPressed: () =>
+                                      _showQuizDialog(context, readingProvider),
                                   icon: const Icon(Icons.quiz),
                                   label: const Text('Take Quiz'),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(context).colorScheme.primary,
-                                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    foregroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
                                   ),
                                 ),
                               ],
@@ -441,17 +487,23 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                                 const SizedBox(height: 8),
                                 Text(
                                   'Chapter Complete! 🎉',
-                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: Theme.of(context).textTheme.titleLarge
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimaryContainer,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   'Quiz Score: ${readingProvider.quizScore}%',
-                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                  ),
+                                  style: Theme.of(context).textTheme.titleMedium
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimaryContainer,
+                                      ),
                                 ),
                               ],
                             ),
@@ -469,7 +521,9 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                   margin: const EdgeInsets.symmetric(horizontal: 16),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
@@ -485,7 +539,9 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                           const SizedBox(width: 16),
                           IconButton(
                             onPressed: _pauseAudio,
-                            icon: Icon(_isPaused ? Icons.play_arrow : Icons.pause),
+                            icon: Icon(
+                              _isPaused ? Icons.play_arrow : Icons.pause,
+                            ),
                             tooltip: _isPaused ? 'Reanudar' : 'Pausar',
                           ),
                         ],
@@ -544,7 +600,7 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                   color: Theme.of(context).colorScheme.surface,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, -2),
                     ),
@@ -583,10 +639,16 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                                     readingProvider.nextParagraph();
                                   },
                             icon: Icon(
-                              readingProvider.isLastParagraph ? Icons.check_circle : Icons.arrow_forward,
+                              readingProvider.isLastParagraph
+                                  ? Icons.check_circle
+                                  : Icons.arrow_forward,
                               size: 18,
                             ),
-                            label: Text(readingProvider.isLastParagraph ? 'Finish' : 'Next'),
+                            label: Text(
+                              readingProvider.isLastParagraph
+                                  ? 'Finish'
+                                  : 'Next',
+                            ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: readingProvider.isLastParagraph
                                   ? Theme.of(context).colorScheme.primary
@@ -603,17 +665,23 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
                         ),
                       ),
 
-                    if (readingProvider.isReadingComplete && !readingProvider.isQuizComplete)
+                    if (readingProvider.isReadingComplete &&
+                        !readingProvider.isQuizComplete)
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: ElevatedButton.icon(
-                            onPressed: () => _showQuizDialog(context, readingProvider),
+                            onPressed: () =>
+                                _showQuizDialog(context, readingProvider),
                             icon: const Icon(Icons.quiz, size: 18),
                             label: const Text('Start Quiz'),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).colorScheme.primary,
-                              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              foregroundColor: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary,
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -642,7 +710,9 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Answer the following questions based on the reading:'),
+              const Text(
+                'Answer the following questions based on the reading:',
+              ),
               const SizedBox(height: 16),
               ...readingProvider.chapter.quizQuestions.asMap().entries.map(
                 (entry) => Padding(
@@ -656,7 +726,12 @@ class _ReadingScreenContentState extends State<_ReadingScreenContent> {
             TextButton(
               onPressed: () {
                 // Simulate quiz completion with random score
-                final score = 75 + (25 * (readingProvider.currentParagraphIndex / readingProvider.chapter.paragraphs.length)).round();
+                final score =
+                    75 +
+                    (25 *
+                            (readingProvider.currentParagraphIndex /
+                                readingProvider.chapter.paragraphs.length))
+                        .round();
                 readingProvider.completeQuiz(score);
                 Navigator.of(context).pop();
               },

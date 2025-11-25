@@ -38,10 +38,10 @@ class HighlightedWord {
   });
 
   /// Obtiene el color de resaltado basado en el tipo
-  Color get highlightColor => type.color.withOpacity(0.3);
+  Color get highlightColor => type.color.withValues(alpha: 0.3);
 
   /// Obtiene el color del texto
-  Color get textColor => type.color.withOpacity(0.8);
+  Color get textColor => type.color.withValues(alpha: 0.8);
 
   /// Crea una copia de la palabra resaltada con nuevos valores
   HighlightedWord copyWith({

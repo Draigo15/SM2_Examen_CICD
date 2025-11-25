@@ -152,7 +152,7 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.7),
+                          .withValues(alpha: 0.7),
                     ),
               ),
             ],
@@ -185,7 +185,7 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
         color: Theme.of(context)
             .colorScheme
             .surfaceContainerHighest
-            .withOpacity(0.3),
+            .withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: TabBar(
@@ -289,7 +289,7 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
                   const SizedBox(width: 8),
                   Text(
@@ -300,7 +300,7 @@ class _TranslationPanelWidgetState extends State<TranslationPanelWidget>
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurface
-                                  .withOpacity(0.7),
+                                  .withValues(alpha: 0.7),
                             ),
                   ),
                   const Spacer(),

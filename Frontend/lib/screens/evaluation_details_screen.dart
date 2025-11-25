@@ -7,10 +7,7 @@ import '../l10n/app_localizations.dart';
 class EvaluationDetailsScreen extends StatelessWidget {
   final ChapterEvaluation evaluation;
 
-  const EvaluationDetailsScreen({
-    super.key,
-    required this.evaluation,
-  });
+  const EvaluationDetailsScreen({super.key, required this.evaluation});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +18,9 @@ class EvaluationDetailsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.colorScheme.surfaceContainer,
       appBar: AppBar(
-        title: Text('${l10n?.chapter ?? "Chapter"} ${evaluation.chapterNumber}'),
+        title: Text(
+          '${l10n?.chapter ?? "Chapter"} ${evaluation.chapterNumber}',
+        ),
         backgroundColor: theme.colorScheme.primary,
         foregroundColor: theme.colorScheme.onPrimary,
         elevation: 0,
@@ -68,10 +67,14 @@ class EvaluationDetailsScreen extends StatelessWidget {
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: evaluation.statusColor.withOpacity(0.1),
+                            color: evaluation.statusColor.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: evaluation.statusColor.withOpacity(0.3),
+                              color: evaluation.statusColor.withValues(
+                                alpha: 0.3,
+                              ),
                             ),
                           ),
                           child: Text(
@@ -95,7 +98,9 @@ class EvaluationDetailsScreen extends StatelessWidget {
                             height: 120,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: evaluation.statusColor.withOpacity(0.1),
+                              color: evaluation.statusColor.withValues(
+                                alpha: 0.1,
+                              ),
                               border: Border.all(
                                 color: evaluation.statusColor,
                                 width: 4,
@@ -109,16 +114,16 @@ class EvaluationDetailsScreen extends StatelessWidget {
                                     '${evaluation.score}',
                                     style: theme.textTheme.headlineLarge
                                         ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: evaluation.statusColor,
-                                    ),
+                                          fontWeight: FontWeight.bold,
+                                          color: evaluation.statusColor,
+                                        ),
                                   ),
                                   Text(
                                     '/${evaluation.maxScore}',
                                     style: theme.textTheme.titleMedium
                                         ?.copyWith(
-                                      color: theme.colorScheme.outline,
-                                    ),
+                                          color: theme.colorScheme.outline,
+                                        ),
                                   ),
                                 ],
                               ),
@@ -230,8 +235,8 @@ class EvaluationDetailsScreen extends StatelessWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color:
-                              theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                          color: theme.colorScheme.surfaceContainerHighest
+                              .withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -254,7 +259,11 @@ class EvaluationDetailsScreen extends StatelessWidget {
                 onPressed: () {
                   // TODO: Implementar navegación a repetir capítulo
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(l10n?.featureComingSoon ?? "Feature coming soon")),
+                    SnackBar(
+                      content: Text(
+                        l10n?.featureComingSoon ?? "Feature coming soon",
+                      ),
+                    ),
                   );
                 },
                 icon: const Icon(Icons.refresh),
@@ -329,9 +338,9 @@ class _SkillCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

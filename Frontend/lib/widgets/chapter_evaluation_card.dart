@@ -64,10 +64,10 @@ class ChapterEvaluationCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: evaluation.statusColor.withOpacity(0.1),
+                      color: evaluation.statusColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: evaluation.statusColor.withOpacity(0.3),
+                        color: evaluation.statusColor.withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),
@@ -117,7 +117,8 @@ class ChapterEvaluationCard extends StatelessWidget {
                         const SizedBox(height: 8),
                         LinearProgressIndicator(
                           value: evaluation.percentage / 100,
-                          backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                          backgroundColor:
+                              theme.colorScheme.surfaceContainerHighest,
                           valueColor: AlwaysStoppedAnimation<Color>(
                             evaluation.statusColor,
                           ),
@@ -215,7 +216,7 @@ class _InfoChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(

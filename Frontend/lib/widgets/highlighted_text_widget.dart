@@ -118,7 +118,7 @@ class _HighlightedTextWidgetState extends State<HighlightedTextWidget> {
                   word.type.name,
                   style: const TextStyle(fontSize: 12),
                 ),
-                backgroundColor: word.type.color.withOpacity(0.2),
+                backgroundColor: word.type.color.withValues(alpha: 0.2),
               ),
             ],
           ),

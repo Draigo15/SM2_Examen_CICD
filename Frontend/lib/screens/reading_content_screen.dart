@@ -146,8 +146,8 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                theme.colorScheme.primary.withOpacity(0.1),
-                theme.colorScheme.primary.withOpacity(0.05),
+                theme.colorScheme.primary.withValues(alpha: 0.1),
+                theme.colorScheme.primary.withValues(alpha: 0.05),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -168,7 +168,9 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: theme.colorScheme.primary.withOpacity(0.3),
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.3,
+                          ),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -238,15 +240,15 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                       end: Alignment.bottomRight,
                       colors: [
                         theme.colorScheme.surface,
-                        theme.colorScheme.surfaceContainerHighest.withOpacity(
-                          0.3,
+                        theme.colorScheme.surfaceContainerHighest.withValues(
+                          alpha: 0.3,
                         ),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 15,
                         offset: const Offset(0, 4),
                       ),
@@ -261,7 +263,9 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withOpacity(0.1),
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Icon(
@@ -291,8 +295,8 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              theme.colorScheme.primary.withOpacity(0.5),
-                              theme.colorScheme.primary.withOpacity(0.1),
+                              theme.colorScheme.primary.withValues(alpha: 0.5),
+                              theme.colorScheme.primary.withValues(alpha: 0.1),
                               Colors.transparent,
                             ],
                           ),
@@ -307,7 +311,9 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                           fontSize: 18,
                           height: 1.8,
                           letterSpacing: 0.3,
-                          color: theme.colorScheme.onSurface.withOpacity(0.9),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.9,
+                          ),
                         ),
                       ),
                     ],
@@ -387,14 +393,14 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
             gradient: LinearGradient(
               colors: [
                 theme.colorScheme.primary,
-                theme.colorScheme.primary.withOpacity(0.8),
+                theme.colorScheme.primary.withValues(alpha: 0.8),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.primary.withOpacity(0.3),
+                color: theme.colorScheme.primary.withValues(alpha: 0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -412,7 +418,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -453,7 +459,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                   value:
                       (provider.currentQuestionIndex + 1) /
                       provider.totalQuestions,
-                  backgroundColor: Colors.white.withOpacity(0.3),
+                  backgroundColor: Colors.white.withValues(alpha: 0.3),
                   valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                   minHeight: 8,
                 ),
@@ -479,15 +485,15 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                       end: Alignment.bottomRight,
                       colors: [
                         theme.colorScheme.surface,
-                        theme.colorScheme.surfaceContainerHighest.withOpacity(
-                          0.5,
+                        theme.colorScheme.surfaceContainerHighest.withValues(
+                          alpha: 0.5,
                         ),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 15,
                         offset: const Offset(0, 4),
                       ),
@@ -503,7 +509,9 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withOpacity(0.1),
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
@@ -539,8 +547,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                       provider.userAnswers[provider.currentQuestionIndex] ==
                           index ||
                       provider.selectedAnswerIndex == index;
-                  final isCorrect =
-                      question != null && index == question.correctAnswer;
+                  final isCorrect = index == question.correctAnswer;
                   final showCorrectAnswer = provider.showCorrectAnswer;
 
                   // Determine card color based on state
@@ -554,13 +561,13 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                     borderColor = Colors.green;
                     gradient = LinearGradient(
                       colors: [
-                        Colors.green.withOpacity(0.3),
-                        Colors.green.withOpacity(0.1),
+                        Colors.green.withValues(alpha: 0.3),
+                        Colors.green.withValues(alpha: 0.1),
                       ],
                     );
                     boxShadows = [
                       BoxShadow(
-                        color: Colors.green.withOpacity(0.3),
+                        color: Colors.green.withValues(alpha: 0.3),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -572,13 +579,13 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                     borderColor = Colors.red;
                     gradient = LinearGradient(
                       colors: [
-                        Colors.red.withOpacity(0.2),
-                        Colors.red.withOpacity(0.1),
+                        Colors.red.withValues(alpha: 0.2),
+                        Colors.red.withValues(alpha: 0.1),
                       ],
                     );
                     boxShadows = [
                       BoxShadow(
-                        color: Colors.red.withOpacity(0.3),
+                        color: Colors.red.withValues(alpha: 0.3),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -588,13 +595,13 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                     borderColor = theme.colorScheme.primary;
                     gradient = LinearGradient(
                       colors: [
-                        theme.colorScheme.primary.withOpacity(0.2),
-                        theme.colorScheme.primary.withOpacity(0.1),
+                        theme.colorScheme.primary.withValues(alpha: 0.2),
+                        theme.colorScheme.primary.withValues(alpha: 0.1),
                       ],
                     );
                     boxShadows = [
                       BoxShadow(
-                        color: theme.colorScheme.primary.withOpacity(0.3),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.3),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -606,7 +613,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                     gradient = null;
                     boxShadows = [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -617,7 +624,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                     margin: const EdgeInsets.only(bottom: 16),
                     child: Semantics(
                       label:
-                          'Opción ${String.fromCharCode(65 + index)}: ${option}',
+                          'Opción ${String.fromCharCode(65 + index)}: $option',
                       hint: isCorrect ? 'Respuesta correcta' : '',
                       button: true,
                       enabled: true,
@@ -751,7 +758,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.amber.withOpacity(0.3),
+                                  color: Colors.amber.withValues(alpha: 0.3),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -815,7 +822,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                             onPressed: () {
                               provider.previousQuestion();
                               HapticFeedback.lightImpact();
-                              SemanticsService.announce(
+                              SemanticsService.sendAnnouncement(
                                 'Pregunta anterior',
                                 TextDirection.ltr,
                               );
@@ -845,7 +852,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
                             onPressed: () {
                               provider.nextQuestion();
                               HapticFeedback.lightImpact();
-                              SemanticsService.announce(
+                              SemanticsService.sendAnnouncement(
                                 'Siguiente pregunta',
                                 TextDirection.ltr,
                               );
@@ -905,7 +912,10 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          SemanticsService.announce(provider.errorMessage!, TextDirection.ltr);
+          SemanticsService.sendAnnouncement(
+            provider.errorMessage!,
+            TextDirection.ltr,
+          );
         }
       }
     } else {
@@ -936,7 +946,10 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       await AudioPlayer().play(AssetSource('sounds/correct_answer.mp3'));
 
       // Announce for screen readers
-      SemanticsService.announce('¡Respuesta correcta!', TextDirection.ltr);
+      SemanticsService.sendAnnouncement(
+        '¡Respuesta correcta!',
+        TextDirection.ltr,
+      );
 
       await Future.delayed(const Duration(milliseconds: 1000));
 
@@ -951,7 +964,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       // First wrong attempt - vibrate and show hint with animation
       _showFeedbackAnimation(false);
 
-      if (await Vibration.hasVibrator() ?? false) {
+      if (await Vibration.hasVibrator()) {
         Vibration.vibrate(duration: 500);
       }
 
@@ -959,7 +972,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       await AudioPlayer().play(AssetSource('sounds/wrong_answer.mp3'));
 
       // Announce for screen readers
-      SemanticsService.announce(
+      SemanticsService.sendAnnouncement(
         'Respuesta incorrecta. Intenta de nuevo.',
         TextDirection.ltr,
       );
@@ -969,7 +982,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       // Second wrong attempt - stronger feedback
       _showFeedbackAnimation(false);
 
-      if (await Vibration.hasVibrator() ?? false) {
+      if (await Vibration.hasVibrator()) {
         Vibration.vibrate(pattern: [0, 200, 100, 200]);
       }
 
@@ -977,7 +990,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       await AudioPlayer().play(AssetSource('sounds/wrong_answer.mp3'));
 
       // Announce for screen readers
-      SemanticsService.announce(
+      SemanticsService.sendAnnouncement(
         'Respuesta incorrecta. Se mostrará la respuesta correcta.',
         TextDirection.ltr,
       );
@@ -986,7 +999,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       await _showLifeLostAnimation();
 
       // Consume a life
-      final lifeConsumed = await livesProvider.consumeLife();
+      await livesProvider.consumeLife();
 
       // Check if out of lives
       if (livesProvider.currentLives <= 0) {
@@ -1155,7 +1168,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               spreadRadius: 1,
             ),
@@ -1237,6 +1250,11 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
+    final chaptersProvider = Provider.of<ReadingChaptersProvider>(
+      context,
+      listen: false,
+    );
+    final livesProvider = Provider.of<LivesProvider>(context, listen: false);
     final result = await provider.submitQuiz();
 
     // Log integration test result
@@ -1258,7 +1276,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
           backgroundColor: Colors.red,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        SemanticsService.announce(errorMessage, TextDirection.ltr);
+        SemanticsService.sendAnnouncement(errorMessage, TextDirection.ltr);
       }
       return;
     }
@@ -1267,12 +1285,6 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
     final passed = result['passed'] as bool;
 
     if (passed) {
-      // Capture provider before async gap
-      final chaptersProvider = Provider.of<ReadingChaptersProvider>(
-        context,
-        listen: false,
-      );
-
       // Mark chapter as completed
       await chaptersProvider.completeChapter(widget.chapter.id, score);
 
@@ -1281,9 +1293,6 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
         _showSuccessDialog(score);
       }
     } else {
-      // Capture provider before async gap
-      final livesProvider = Provider.of<LivesProvider>(context, listen: false);
-
       // Consume a life and show retry dialog
       await livesProvider.consumeLife();
 
@@ -1421,9 +1430,7 @@ class _ReadingContentScreenState extends State<ReadingContentScreen> {
   }
 }
 
-extension _ExpandedWidget on Widget {
-  Widget get expand => Expanded(child: this);
-}
+// Removed unused extension to satisfy analyzer
 
 /// Life Lost Animation Dialog Widget
 class LifeLostAnimationDialog extends StatefulWidget {
@@ -1488,7 +1495,7 @@ class _LifeLostAnimationDialogState extends State<LifeLostAnimationDialog>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.red.withOpacity(0.5),
+                      color: Colors.red.withValues(alpha: 0.5),
                       blurRadius: 40,
                       spreadRadius: 10,
                     ),
@@ -1505,7 +1512,7 @@ class _LifeLostAnimationDialogState extends State<LifeLostAnimationDialog>
                           angle: value * 0.2,
                           child: Icon(
                             Icons.favorite_border,
-                            color: Colors.red.withOpacity(1 - value),
+                            color: Colors.red.withValues(alpha: 1 - value),
                             size: 80,
                           ),
                         );
